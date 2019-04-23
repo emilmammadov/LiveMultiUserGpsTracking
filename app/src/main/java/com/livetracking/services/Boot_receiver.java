@@ -11,11 +11,7 @@ import android.widget.Toast;
 import com.livetracking.nav.Main;
 
 import static android.content.Context.ALARM_SERVICE;
-import static android.graphics.Color.parseColor;
 
-/**
- * Created by WANGSUN on 24-July-18.
- */
 
 public class Boot_receiver extends BroadcastReceiver {
     Context context;
