@@ -21,10 +21,8 @@ import android.widget.Toast;
 
 import com.livetracking.R;
 import com.livetracking.login.Login;
-import com.livetracking.nav.fragments.History;
 import com.livetracking.nav.fragments.Home;
 import com.livetracking.nav.fragments.Map;
-import com.livetracking.nav.locations.DbHelper_gps;
 import com.livetracking.services.Alarm_broadcast;
 
 public class Main extends AppCompatActivity {
@@ -42,7 +40,6 @@ public class Main extends AppCompatActivity {
 
 
     SQLiteDatabase db;
-    DbHelper_gps helperDb;
     Cursor cursor;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -88,15 +85,6 @@ public class Main extends AppCompatActivity {
                         menu_delete.getItem(0).setVisible(false);
                     }
                     return true;
-
-                case R.id.nav_history:
-                    if(!fragment_selector.equals("history")){
-                        fragment_selector="history";
-                        fragmentManager.beginTransaction().replace(R.id.content,new History()).commit();
-                        menu_delete.getItem(0).setVisible(true);
-                    }
-
-                    return true;
             }
             return false;
         }
@@ -114,8 +102,6 @@ public class Main extends AppCompatActivity {
         fragment_selector="home";
         fragmentManager.beginTransaction().replace(R.id.content,new Home()).commit();
         navigation.getMenu().getItem(0).setChecked(true);
-
-        helperDb=new DbHelper_gps(Main.this);
 
         sp = getSharedPreferences("myData",MODE_PRIVATE);
 
@@ -153,49 +139,7 @@ public class Main extends AppCompatActivity {
                     });
             welcomeBuilder.show();
         }
-        else if (id == R.id.nav_delete) {
-
-            AlertDialog.Builder welcomeBuilder = new AlertDialog.Builder(this);
-            welcomeBuilder.setTitle("Delete?")
-                    .setMessage("Locations will be deleted permanently.")
-                    .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            delete_locations();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            welcomeBuilder.show();
-        }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void delete_locations(){
-
-        db=helperDb.getReadableDatabase();
-        helperDb.create_table(db);
-        cursor=helperDb.getAllInfo(db);
-
-        if(cursor.moveToFirst()){
-            //table is not empty
-            helperDb.deleteAll(db);
-            Toast.makeText(Main.this,"Locations deleted.", Toast.LENGTH_LONG).show();
-
-            //fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentManager.beginTransaction().replace(R.id.content,new History()).commit();
-
-        }
-        else {
-            Toast.makeText(Main.this,"No data available.",Toast.LENGTH_LONG).show();
-        }
-
-        db.close();
     }
 
     public void logOut(){

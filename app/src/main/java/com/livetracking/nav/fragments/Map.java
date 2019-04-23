@@ -29,14 +29,9 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.livetracking.R;
-import com.livetracking.nav.locations.DbHelper_gps;
-import com.livetracking.nav.locations.LocationAdapter;
-import com.livetracking.nav.locations.LocationClass;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -95,55 +90,8 @@ public class Map extends Fragment implements OnMapReadyCallback{
             get_current_location();
         }
         else if(sp.getString("map_from","").equals("home")){
-            get_last_location();
+            get_current_location();
         }
-
-    }
-
-    public void get_last_location(){
-        //it is recent location
-
-        DbHelper_gps helperDb=new DbHelper_gps(getContext());
-        SQLiteDatabase db =helperDb.getReadableDatabase();
-        Cursor cursor=helperDb.getAllInfo(db);
-
-        ArrayList<LocationClass> arrayList=new ArrayList();
-
-        if(cursor.moveToFirst()){
-            do{
-                int id;
-                double longi,lati;
-                long time;
-
-                id=cursor.getInt(0);
-                longi=cursor.getDouble(1);
-                lati=cursor.getDouble(2);
-                time=cursor.getLong(3);
-
-                arrayList.add(new LocationClass(id,longi,lati,time));
-            }while(cursor.moveToNext());
-
-            Collections.sort(arrayList, new Comparator<LocationClass>() {
-                public int compare(LocationClass m1, LocationClass m2) {
-                    return Integer.compare(m1.getId(), m2.getId());
-                }
-            });
-
-            Collections.reverse(arrayList);
-
-            LatLng sydney = new LatLng(arrayList.get(0).getLatitude(),arrayList.get(0).getLongitude());
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Your last location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-
-        }
-        else {
-            LatLng sydney = new LatLng(16.17409569,75.65876573);
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Developer Location"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-            Toast.makeText(getContext(),"Turn on service to save new location.",Toast.LENGTH_LONG).show();
-        }
-
-        db.close();
 
     }
 

@@ -87,7 +87,7 @@ public class Home extends Fragment implements View.OnClickListener{
             }
             else {
                 //if off then turn on
-                
+
                 btn_service.setBackgroundColor(parseColor("#00c853"));
 
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+2000,2*60000,pi);

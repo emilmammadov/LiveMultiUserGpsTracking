@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
-import com.livetracking.nav.locations.DbHelper_gps;
 
 import java.util.Date;
 
@@ -31,14 +30,12 @@ public class Alarm_broadcast extends BroadcastReceiver {
     private LocationListener listener;
 
     SQLiteDatabase db;
-    DbHelper_gps helperDb;
 
 
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context2=context;
 
-        helperDb=new DbHelper_gps(context2);
         initialize();
     }
 
@@ -49,17 +46,10 @@ public class Alarm_broadcast extends BroadcastReceiver {
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                db = helperDb.getWritableDatabase();
-                helperDb.create_table(db);
 
                 Date new_date=new Date();
                 long long_date=new_date.getTime();
 
-                //Date currentTime = Calendar.getInstance().getTime();
-                //SimpleDateFormat sdf=new SimpleDateFormat("hh:mm aa dd-MM-yyyy");
-                //String temp_time=sdf.format(new_date);
-
-                helperDb.addvalues(location.getLongitude(),location.getLatitude(),long_date,db);
                 db.close();
                 Toast.makeText(context2,"Location added.",Toast.LENGTH_SHORT).show();
 
@@ -94,19 +84,11 @@ public class Alarm_broadcast extends BroadcastReceiver {
 
             //last location is inserted
             Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            //Toast.makeText(context2,"Location: "+lastKnownLocation.getLatitude(),Toast.LENGTH_LONG).show();
 
-            db = helperDb.getWritableDatabase();
-            helperDb.create_table(db);
 
             Date new_date=new Date();
             long long_date=new_date.getTime();
 
-            //Date currentTime = Calendar.getInstance().getTime();
-            //SimpleDateFormat sdf=new SimpleDateFormat("hh:mm aa dd-MM-yyyy");
-            //String temp_time=sdf.format(new_date);
-
-            helperDb.addvalues(lastKnownLocation.getLongitude(),lastKnownLocation.getLatitude(),long_date,db);
             db.close();
             Toast.makeText(context2,"Location added.",Toast.LENGTH_SHORT).show();
         }
