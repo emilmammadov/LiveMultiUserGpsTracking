@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -24,19 +23,14 @@ import com.livetracking.services.Alarm_broadcast;
 
 public class Main extends AppCompatActivity {
     FragmentManager fragmentManager = getSupportFragmentManager();
-    //FragmentTransaction fragmentTransaction;
-
     String fragment_selector;
-
     BottomNavigationView navigation;
-
     Menu menu_delete;
 
     SharedPreferences sp;
     SharedPreferences.Editor editor;
 
-    Cursor cursor;
-
+    // SELECT MENU
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -47,8 +41,6 @@ public class Main extends AppCompatActivity {
             editor.putString("map_from","direct");
             editor.apply();
 
-            //fragmentTransaction = fragmentManager.beginTransaction();
-
             switch (item.getItemId()) {
                 case R.id.nav_home:
                     if(!fragment_selector.equals("home")){
@@ -58,24 +50,13 @@ public class Main extends AppCompatActivity {
                     }
                     return true;
                 case R.id.nav_map:
-                    if(!fragment_selector.equals("map")){
+                    if((!fragment_selector.equals("map")) || (!navigation.getMenu().getItem(1).isChecked())){
                         fragment_selector="map";
 
                         editor=sp.edit();
                         editor.putString("map_from","direct");
                         editor.apply();
 
-                        fragmentManager.beginTransaction().replace(R.id.content,new Map()).commit();
-                        menu_delete.getItem(0).setVisible(false);
-                    }
-
-                    if(!navigation.getMenu().getItem(1).isChecked()){
-                        fragment_selector="map";
-
-                        editor=sp.edit();
-                        editor.putString("map_from","direct");
-                        editor.apply();
-                        //fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentManager.beginTransaction().replace(R.id.content,new Map()).commit();
                         menu_delete.getItem(0).setVisible(false);
                     }
@@ -93,7 +74,6 @@ public class Main extends AppCompatActivity {
         navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        //fragmentTransaction = fragmentManager.beginTransaction();
         fragment_selector="home";
         fragmentManager.beginTransaction().replace(R.id.content,new Home()).commit();
         navigation.getMenu().getItem(0).setChecked(true);
@@ -137,7 +117,6 @@ public class Main extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
 
         AlertDialog.Builder welcomeBuilder = new AlertDialog.Builder(this);
         welcomeBuilder.setTitle("Exit")

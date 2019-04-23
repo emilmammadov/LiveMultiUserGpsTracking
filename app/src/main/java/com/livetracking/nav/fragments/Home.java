@@ -23,10 +23,6 @@ import com.livetracking.services.Alarm_broadcast;
 import static android.content.Context.ALARM_SERVICE;
 import static android.graphics.Color.parseColor;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class Home extends Fragment implements View.OnClickListener{
     Button btn_service;
 

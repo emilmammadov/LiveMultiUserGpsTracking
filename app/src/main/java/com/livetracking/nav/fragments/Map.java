@@ -30,10 +30,6 @@ import com.livetracking.R;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-
-/**
- * A simple {@link Fragment} subclass.
- */
 public class Map extends Fragment implements OnMapReadyCallback{
     private GoogleMap mMap;
 
