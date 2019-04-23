@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -29,9 +27,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.livetracking.R;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -75,23 +70,7 @@ public class Map extends Fragment implements OnMapReadyCallback{
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng sydney;
-
-        if(sp.getString("map_from","").equals("history")){
-
-            Double temp_longi = Double.longBitsToDouble(sp.getLong("longi", Double.doubleToLongBits(0)));
-            Double temp_lati = Double.longBitsToDouble(sp.getLong("lati", 0));
-
-            sydney = new LatLng(temp_lati,temp_longi);
-            mMap.addMarker(new MarkerOptions().position(sydney).title("Your History"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        }
-        else if(sp.getString("map_from","").equals("direct")){
-            get_current_location();
-        }
-        else if(sp.getString("map_from","").equals("home")){
-            get_current_location();
-        }
+        get_current_location();
 
     }
 

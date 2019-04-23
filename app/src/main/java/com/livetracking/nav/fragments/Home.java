@@ -45,7 +45,7 @@ public class Home extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        btn_service=(Button) rootView.findViewById(R.id.id_service);
+        btn_service= rootView.findViewById(R.id.id_service);
         btn_service.setOnClickListener(this);
 
         sp=getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);

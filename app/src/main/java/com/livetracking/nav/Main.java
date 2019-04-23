@@ -12,12 +12,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.livetracking.R;
 import com.livetracking.login.Login;
@@ -38,8 +36,6 @@ public class Main extends AppCompatActivity {
     SharedPreferences sp;
     SharedPreferences.Editor editor;
 
-
-    SQLiteDatabase db;
     Cursor cursor;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -120,24 +116,7 @@ public class Main extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.nav_logout) {
-
-            AlertDialog.Builder welcomeBuilder = new AlertDialog.Builder(this);
-            welcomeBuilder.setTitle("Log Out?")
-                    .setMessage("Next time when U open app, u have to Login again.")
-                    .setCancelable(false)
-                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            logOut();
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            welcomeBuilder.show();
+            logOut();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -182,20 +161,6 @@ public class Main extends AppCompatActivity {
                     }
                 });
         welcomeBuilder.show();
-    }
-
-    public void call_by_history(double longi,double lati){
-        editor=sp.edit();
-        editor.putString("map_from","history");
-        editor.putLong("longi",Double.doubleToRawLongBits(longi));
-        editor.putLong("lati",Double.doubleToRawLongBits(lati));
-        editor.apply();
-
-        //fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentManager.beginTransaction().replace(R.id.content,new Map()).commit();
-        fragment_selector="map";
-        menu_delete.getItem(0).setVisible(false);
-
     }
 
     public void call_by_home(){

@@ -19,10 +19,6 @@ import java.util.Date;
 
 import static android.content.Context.LOCATION_SERVICE;
 
-/**
- * Created by WANGSUN on 24-July-18.
- */
-
 public class Alarm_broadcast extends BroadcastReceiver {
     Context context2;
 
