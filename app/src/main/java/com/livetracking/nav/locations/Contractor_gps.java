@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.nav.locations;
+package com.livetracking.nav.locations;
 
 /**
  * Created by WANGSUN on 24-July-18.

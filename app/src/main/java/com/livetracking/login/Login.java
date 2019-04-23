@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.login;
+package com.livetracking.login;
 
 import android.Manifest;
 import android.content.Context;
@@ -22,8 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wangsun.android.livetracking.R;
-import com.wangsun.android.livetracking.nav.Main;
+import com.livetracking.R;
+import com.livetracking.nav.Main;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {

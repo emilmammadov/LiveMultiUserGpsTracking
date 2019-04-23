@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.services;
+package com.livetracking.services;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
-import com.wangsun.android.livetracking.nav.Main;
+import com.livetracking.nav.Main;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.graphics.Color.parseColor;

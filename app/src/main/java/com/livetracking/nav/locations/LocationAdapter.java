@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.nav.locations;
+package com.livetracking.nav.locations;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.wangsun.android.livetracking.R;
+import com.livetracking.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

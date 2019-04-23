@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.nav.fragments;
+package com.livetracking.nav.fragments;
 
 
 import android.Manifest;
@@ -28,10 +28,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.wangsun.android.livetracking.R;
-import com.wangsun.android.livetracking.nav.locations.DbHelper_gps;
-import com.wangsun.android.livetracking.nav.locations.LocationAdapter;
-import com.wangsun.android.livetracking.nav.locations.LocationClass;
+import com.livetracking.R;
+import com.livetracking.nav.locations.DbHelper_gps;
+import com.livetracking.nav.locations.LocationAdapter;
+import com.livetracking.nav.locations.LocationClass;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.services;
+package com.livetracking.services;
 
 
 import android.Manifest;
@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.widget.Toast;
-import com.wangsun.android.livetracking.nav.locations.DbHelper_gps;
+import com.livetracking.nav.locations.DbHelper_gps;
 
 import java.util.Date;
 

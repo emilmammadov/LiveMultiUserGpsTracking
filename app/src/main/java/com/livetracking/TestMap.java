@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking;
+package com.livetracking;
 
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;

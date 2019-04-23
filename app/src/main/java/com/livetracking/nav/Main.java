@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.nav;
+package com.livetracking.nav;
 
 import android.app.AlarmManager;
 import android.app.Fragment;
@@ -19,13 +19,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.wangsun.android.livetracking.R;
-import com.wangsun.android.livetracking.login.Login;
-import com.wangsun.android.livetracking.nav.fragments.History;
-import com.wangsun.android.livetracking.nav.fragments.Home;
-import com.wangsun.android.livetracking.nav.fragments.Map;
-import com.wangsun.android.livetracking.nav.locations.DbHelper_gps;
-import com.wangsun.android.livetracking.services.Alarm_broadcast;
+import com.livetracking.R;
+import com.livetracking.login.Login;
+import com.livetracking.nav.fragments.History;
+import com.livetracking.nav.fragments.Home;
+import com.livetracking.nav.fragments.Map;
+import com.livetracking.nav.locations.DbHelper_gps;
+import com.livetracking.services.Alarm_broadcast;
 
 public class Main extends AppCompatActivity {
     FragmentManager fragmentManager = getSupportFragmentManager();

@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.nav.locations;
+package com.livetracking.nav.locations;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
-import com.wangsun.android.livetracking.nav.Main;
+import com.livetracking.nav.Main;
 
 /**
  * Created by WANGSUN on 24-July-18.

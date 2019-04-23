@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.login;
+package com.livetracking.login;
 
 /**
  * Created by WANGSUN on 24-July-18.

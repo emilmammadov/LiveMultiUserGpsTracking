@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.login;
+package com.livetracking.login;
 
 import android.content.ContentValues;
 import android.content.Context;

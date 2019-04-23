@@ -1,4 +1,4 @@
-package com.wangsun.android.livetracking.nav.fragments;
+package com.livetracking.nav.fragments;
 
 
 import android.app.AlarmManager;
@@ -12,12 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wangsun.android.livetracking.R;
-import com.wangsun.android.livetracking.nav.Main;
-import com.wangsun.android.livetracking.services.Alarm_broadcast;
+import com.livetracking.R;
+import com.livetracking.nav.Main;
+import com.livetracking.services.Alarm_broadcast;
 
 import static android.content.Context.ALARM_SERVICE;
 import static android.graphics.Color.parseColor;
