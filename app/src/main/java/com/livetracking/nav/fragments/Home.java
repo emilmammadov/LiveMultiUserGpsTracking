@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.livetracking.R;
 import com.livetracking.nav.Main;
 import com.livetracking.services.Alarm_broadcast;
@@ -85,6 +87,7 @@ public class Home extends Fragment implements View.OnClickListener{
             }
             else {
                 //if off then turn on
+                
                 btn_service.setBackgroundColor(parseColor("#00c853"));
 
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+2000,2*60000,pi);

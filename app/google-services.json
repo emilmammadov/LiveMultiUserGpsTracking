@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "832041660081",
+    "firebase_url": "https://live-track-214da.firebaseio.com",
+    "project_id": "live-track-214da",
+    "storage_bucket": "live-track-214da.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832041660081:android:74edaa2e263471ac",
+        "android_client_info": {
+          "package_name": "com.livetracking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832041660081-958istckpo8il8r1122qfa7blq0lvdao.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.livetracking",
+            "certificate_hash": "5ebeb806e0309694998821feb693418a406cc617"
+          }
+        },
+        {
+          "client_id": "832041660081-fbp51mifk7mkhiu6l97dtbb7bq8hchjg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXsDbPIHkwOhnLwUt-NZMFyZQfygRssg0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832041660081-fbp51mifk7mkhiu6l97dtbb7bq8hchjg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
