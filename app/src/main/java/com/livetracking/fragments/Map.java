@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,10 +32,9 @@ import com.livetracking.R;
 import static android.content.Context.LOCATION_SERVICE;
 
 public class Map extends Fragment implements OnMapReadyCallback{
+
     private GoogleMap mMap;
-
     SharedPreferences sp;
-
     private LocationManager locationManager;
     private LocationListener listener,listener2;
 
@@ -45,8 +45,7 @@ public class Map extends Fragment implements OnMapReadyCallback{
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView= inflater.inflate(R.layout.fragment_map, container, false);
 
@@ -76,8 +75,9 @@ public class Map extends Fragment implements OnMapReadyCallback{
         listener2 = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                Log.e("LISTENER2","1");
                 LatLng sydney = new LatLng(location.getLatitude(),location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Your current location"));
+                mMap.addMarker(new MarkerOptions().position(sydney).title("Lokasyon"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
             }
 
@@ -101,6 +101,7 @@ public class Map extends Fragment implements OnMapReadyCallback{
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
+                Log.e("LISTENER1","1");
                 LatLng sydney = new LatLng(location.getLatitude(),location.getLongitude());
                 mMap.addMarker(new MarkerOptions().position(sydney).title("Your current location"));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
@@ -135,6 +136,7 @@ public class Map extends Fragment implements OnMapReadyCallback{
 
 
     void update_new_location() {
+        Log.e("UPDATE_NEW_LOCATION","1");
         Toast.makeText(getContext(),"Getting current location..",Toast.LENGTH_LONG).show();
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, listener);

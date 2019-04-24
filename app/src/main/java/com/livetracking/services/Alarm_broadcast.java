@@ -24,8 +24,6 @@ public class Alarm_broadcast extends BroadcastReceiver {
     private LocationManager locationManager;
     private LocationListener listener;
 
-    SQLiteDatabase db;
-
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -45,7 +43,6 @@ public class Alarm_broadcast extends BroadcastReceiver {
                 Date new_date=new Date();
                 long long_date=new_date.getTime();
 
-                db.close();
                 Toast.makeText(context2,"Location added.",Toast.LENGTH_SHORT).show();
 
                 locationManager.removeUpdates(listener);
@@ -84,7 +81,6 @@ public class Alarm_broadcast extends BroadcastReceiver {
             Date new_date=new Date();
             long long_date=new_date.getTime();
 
-            db.close();
             Toast.makeText(context2,"Location added.",Toast.LENGTH_SHORT).show();
         }
 

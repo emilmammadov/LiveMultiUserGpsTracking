@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -151,15 +152,23 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    if(strPassword.equals(user.getPassword()) && check_permission()){
-                        editor = sp.edit();
-                        editor.putBoolean("login",true);
-                        editor.apply();
-                        Runtime_permission();
+                    if(user.getUsername() == null || user.getPass() == null){
+                        Toast.makeText(getApplicationContext(),"Hatalı", Toast.LENGTH_SHORT).show();
                     }
                     else{
-                        Toast.makeText(getApplicationContext(),"Yanlış", Toast.LENGTH_SHORT).show();
+                        if(strPassword.equals(user.getPass()) && check_permission()){
+                            editor = sp.edit();
+                            editor.putBoolean("login",true);
+                            editor.apply();
+                            Runtime_permission();
+                        }
+                        else{
+                            Log.e(user.getPass() + "", "pass");
+                            Log.e(user.getUsername() + "", "user");
+                            Toast.makeText(getApplicationContext(),"Yanlış", Toast.LENGTH_SHORT).show();
+                        }
                     }
+
                 }
 
                 @Override
