@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +36,9 @@ public class Map extends Fragment implements OnMapReadyCallback{
     private GoogleMap mMap;
     SharedPreferences sp;
     private LocationManager locationManager;
-    private LocationListener listener,listener2;
+    private LocationListener listener;
+    private LatLng latLng;
+    Criteria criteria;
 
 
     public Map() {
@@ -65,51 +67,35 @@ public class Map extends Fragment implements OnMapReadyCallback{
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        get_current_location();
+        getLocation();
 
     }
 
-    public void get_current_location(){
+
+    public void getLocation(){
         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
-
-        listener2 = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                Log.e("LISTENER2","1");
-                LatLng sydney = new LatLng(location.getLatitude(),location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Lokasyon"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-            }
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-                //if GPS setting is off. It will redirect to the setting
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                getContext().startActivity(i);
-            }
-        };
-
+        criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        final String provider = locationManager.getBestProvider(criteria,true);
 
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.e("LISTENER1","1");
-                LatLng sydney = new LatLng(location.getLatitude(),location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(sydney).title("Your current location"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
+                latLng = new LatLng(location.getLatitude(),location.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Yeni Lokasyon"));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,18));
                 locationManager.removeUpdates(listener);
 
-                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 6000, 0, listener2);
+                /*if(provider == null){
+                    Toast.makeText(getContext(),"NULL_PROVIDER", Toast.LENGTH_SHORT).show();
                 }
+                else{
+                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 6000, 0, listener);
+                    }
+                }*/
+
 
             }
 
@@ -130,27 +116,22 @@ public class Map extends Fragment implements OnMapReadyCallback{
         };
 
 
-
-        update_new_location();
-    }
-
-
-    void update_new_location() {
-        Log.e("UPDATE_NEW_LOCATION","1");
-        Toast.makeText(getContext(),"Getting current location..",Toast.LENGTH_LONG).show();
-        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 3000, 0, listener);
+        if(provider == null){
+            Toast.makeText(getContext(),"NULL_PROVIDER", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                locationManager.requestLocationUpdates(provider, 3000, 0, listener);
+            }
         }
 
-
     }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         if(listener!=null)
             locationManager.removeUpdates(listener);
-        if(listener2!=null)
-            locationManager.removeUpdates(listener2);
     }
 }

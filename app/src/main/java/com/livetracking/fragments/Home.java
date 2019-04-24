@@ -1,10 +1,6 @@
 package com.livetracking.fragments;
 
-
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,9 +12,7 @@ import android.widget.Toast;
 
 import com.livetracking.R;
 import com.livetracking.Main;
-import com.livetracking.services.Alarm_broadcast;
 
-import static android.content.Context.ALARM_SERVICE;
 import static android.graphics.Color.parseColor;
 
 public class Home extends Fragment implements View.OnClickListener{
@@ -56,18 +50,9 @@ public class Home extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v==btn_service){
 
-            // INITIALIZE INTENT
-            Intent intent=new Intent(getContext(),Alarm_broadcast.class);
-            //PASS CONTEXT,YOUR PRIVATE REQUEST CODE,INTENT OBJECT AND FLAG
-            PendingIntent pi= PendingIntent.getBroadcast(getContext(),0,intent,0);
-            AlarmManager alarmManager= (AlarmManager) getContext().getSystemService(ALARM_SERVICE);
-            //will trigger every5 minnutes
-
             if(sp.getString("service","").equals("on")){
                 //if on then turn off
                 btn_service.setBackgroundColor(parseColor("#cfd8dc"));
-
-                alarmManager.cancel(pi);
 
                 editor=sp.edit();
                 editor.putString("service","off");
@@ -82,8 +67,6 @@ public class Home extends Fragment implements View.OnClickListener{
                 //if off then turn on
 
                 btn_service.setBackgroundColor(parseColor("#00c853"));
-
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis()+2000,2*60000,pi);
 
                 editor=sp.edit();
                 editor.putString("service","on");

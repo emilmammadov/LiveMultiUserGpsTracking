@@ -1,7 +1,5 @@
 package com.livetracking;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,7 +15,6 @@ import android.view.MenuItem;
 import com.livetracking.fragments.Home;
 import com.livetracking.fragments.Login;
 import com.livetracking.fragments.Map;
-import com.livetracking.services.Alarm_broadcast;
 
 public class Main extends AppCompatActivity {
     FragmentManager fragmentManager = getSupportFragmentManager();
@@ -103,12 +100,6 @@ public class Main extends AppCompatActivity {
         editor.putBoolean("login",false);
         editor.putString("service","off");
         editor.apply();
-
-        //disable the service if it is running
-        Intent intent=new Intent(Main.this,Alarm_broadcast.class);
-        PendingIntent pi= PendingIntent.getBroadcast(Main.this,0,intent,0);
-        AlarmManager alarmManager= (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(pi);
 
         finish();
     }
