@@ -11,7 +11,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -78,7 +77,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         changeSignUp.setOnClickListener(this);
 
         sp = getSharedPreferences("myData", Context.MODE_PRIVATE);
-        editor = sp.edit();
 
         purple = changeSignUp.getTextColors();
         original =  changeLogin.getTextColors();
@@ -113,6 +111,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             layoutSignUp.setVisibility(View.GONE);
             layoutLogin.setVisibility(View.VISIBLE);
         }
+
         else if(v== btnSignUp){
             strUsername = etSignUsername.getText().toString();
             strPassword = etSignPassword.getText().toString();
@@ -128,6 +127,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         User user = new User(id,strUsername,strPassword);
                         userReference.child(strUsername).setValue(user);
 
+                        editor = sp.edit();
                         editor.putBoolean("login",true);
                         editor.apply();
                         Runtime_permission();
@@ -144,42 +144,32 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         }
         else if(v== btnLogin){
+            strUsername = etLoginUsername.getText().toString();
+            strPassword = etLoginPassword.getText().toString();
+            query = userReference.child(strUsername);
 
-            if(check_permission()){
-                strUsername = etLoginUsername.getText().toString();
-                strPassword = etLoginPassword.getText().toString();
-            }
+            query.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if(strPassword.equals(user.getPassword()) && check_permission()){
+                        editor = sp.edit();
+                        editor.putBoolean("login",true);
+                        editor.apply();
+                        Runtime_permission();
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(),"Yanlış", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
         }
-    }
-    
-    /*public void check_username(){
-
-        if(//Username yoksa) {
-            //EGER USERNAME YOKSA BURADA KAYDET
-            Toast.makeText(Login.this,"Account created!",Toast.LENGTH_SHORT).show();
-
-            editor=sp.edit();
-            editor.putBoolean("login",true);
-            editor.putString("username", strUsername);
-            editor.apply();
-            startActivity(new Intent(Login.this, Main.class));
-        }
-
-    }*/
-
-    public void login(){
-        String temp_password = "";
-
-            if(strPassword.equals(temp_password)){
-                //PASSWORD UYUSUYORSA
-                editor.putBoolean("login",true);
-                editor.putString("username", strUsername);
-                editor.apply();
-                startActivity(new Intent(Login.this,Main.class));
-            }
-            else
-                Toast.makeText(Login.this,"Wrong Password.",Toast.LENGTH_SHORT).show();
     }
 
     public void Runtime_permission(){
