@@ -1,20 +1,15 @@
 package com.livetracking;
 
 public class User {
-    String userId, username, password;
+    String username, password;
 
     public User(){
 
     }
 
-    public User(String userId, String username, String password) {
-        this.userId = userId;
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public String getUserId(){
-        return userId;
     }
 
     public String getUsername() {

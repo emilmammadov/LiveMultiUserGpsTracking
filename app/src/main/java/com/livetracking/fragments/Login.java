@@ -122,9 +122,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(!(dataSnapshot.getChildrenCount() > 0) && check_permission()){
-                        String id = userReference.push().getKey();
 
-                        User user = new User(id,strUsername,strPassword);
+                        User user = new User(strUsername,strPassword);
                         userReference.child(strUsername).setValue(user);
 
                         editor = sp.edit();
