@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -18,8 +20,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.livetracking.Main;
 import com.livetracking.R;
 import com.livetracking.User;
@@ -34,6 +40,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     ColorStateList original,purple;
     EditText etSignUsername, etSignPassword, etLoginUsername, etLoginPassword;
     String strUsername, strPassword;
+    Query query;
 
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -71,6 +78,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         changeSignUp.setOnClickListener(this);
 
         sp = getSharedPreferences("myData", Context.MODE_PRIVATE);
+        editor = sp.edit();
 
         purple = changeSignUp.getTextColors();
         original =  changeLogin.getTextColors();
@@ -106,18 +114,33 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             layoutLogin.setVisibility(View.VISIBLE);
         }
         else if(v== btnSignUp){
+            strUsername = etSignUsername.getText().toString();
+            strPassword = etSignPassword.getText().toString();
 
-            if(check_permission()){
-                String id = userReference.push().getKey();
-                strUsername = etSignUsername.getText().toString();
-                strPassword = etSignPassword.getText().toString();
+            query = userReference.orderByChild("username").equalTo(strUsername);
 
-                User user = new User(id,strUsername,strPassword);
-                userReference.child(id).setValue(user);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if(!(dataSnapshot.getChildrenCount() > 0) && check_permission()){
+                        String id = userReference.push().getKey();
 
-                Runtime_permission();
+                        User user = new User(id,strUsername,strPassword);
+                        userReference.child(strUsername).setValue(user);
 
-            }
+                        editor.putBoolean("login",true);
+                        editor.apply();
+                        Runtime_permission();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"Bu kullanıcı ismi dolu", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
 
         }
         else if(v== btnLogin){
@@ -150,7 +173,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
             if(strPassword.equals(temp_password)){
                 //PASSWORD UYUSUYORSA
-                editor=sp.edit();
                 editor.putBoolean("login",true);
                 editor.putString("username", strUsername);
                 editor.apply();
@@ -177,11 +199,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void requestFineLocation(){
-
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_ACCESS_FINE_LOCATION);
         }
-
-        ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_ACCESS_FINE_LOCATION);
     }
 
     @Override
