@@ -1,6 +1,5 @@
 package com.livetracking.services;
 
-
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;

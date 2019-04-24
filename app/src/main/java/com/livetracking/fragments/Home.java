@@ -1,4 +1,4 @@
-package com.livetracking.nav.fragments;
+package com.livetracking.fragments;
 
 
 import android.app.AlarmManager;
@@ -14,10 +14,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.livetracking.R;
-import com.livetracking.nav.Main;
+import com.livetracking.Main;
 import com.livetracking.services.Alarm_broadcast;
 
 import static android.content.Context.ALARM_SERVICE;
@@ -36,8 +34,7 @@ public class Home extends Fragment implements View.OnClickListener{
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 

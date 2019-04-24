@@ -1,4 +1,4 @@
-package com.livetracking.nav.fragments;
+package com.livetracking.fragments;
 
 
 import android.Manifest;

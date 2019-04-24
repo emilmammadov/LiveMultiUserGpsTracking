@@ -1,7 +1,6 @@
-package com.livetracking.nav;
+package com.livetracking;
 
 import android.app.AlarmManager;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,10 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.livetracking.R;
-import com.livetracking.login.Login;
-import com.livetracking.nav.fragments.Home;
-import com.livetracking.nav.fragments.Map;
+import com.livetracking.fragments.Home;
+import com.livetracking.fragments.Login;
+import com.livetracking.fragments.Map;
 import com.livetracking.services.Alarm_broadcast;
 
 public class Main extends AppCompatActivity {
