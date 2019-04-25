@@ -16,7 +16,7 @@ import com.livetracking.Main;
 import static android.graphics.Color.parseColor;
 
 public class Home extends Fragment implements View.OnClickListener{
-    Button btn_service;
+    Button btnService,btnShare,btnFind;
 
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -32,15 +32,19 @@ public class Home extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        btn_service= rootView.findViewById(R.id.id_service);
-        btn_service.setOnClickListener(this);
+        btnService = rootView.findViewById(R.id.id_service);
+        btnShare = rootView.findViewById(R.id.btnShare);
+        btnFind = rootView.findViewById(R.id.btnFind);
+        btnService.setOnClickListener(this);
+        btnShare.setOnClickListener(this);
+        btnFind.setOnClickListener(this);
 
         sp=getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);
         if(sp.getString("service","").equals("on")){
-            btn_service.setBackgroundColor(parseColor("#00c853"));
+            btnService.setBackgroundColor(parseColor("#00c853"));
         }
         else {
-            btn_service.setBackgroundColor(parseColor("#cfd8dc"));
+            btnService.setBackgroundColor(parseColor("#cfd8dc"));
         }
 
         return  rootView;
@@ -48,11 +52,11 @@ public class Home extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(v==btn_service){
+        if(v== btnService){
 
             if(sp.getString("service","").equals("on")){
                 //if on then turn off
-                btn_service.setBackgroundColor(parseColor("#cfd8dc"));
+                btnService.setBackgroundColor(parseColor("#cfd8dc"));
 
                 editor=sp.edit();
                 editor.putString("service","off");
@@ -66,7 +70,7 @@ public class Home extends Fragment implements View.OnClickListener{
             else {
                 //if off then turn on
 
-                btn_service.setBackgroundColor(parseColor("#00c853"));
+                btnService.setBackgroundColor(parseColor("#00c853"));
 
                 editor=sp.edit();
                 editor.putString("service","on");
@@ -74,6 +78,12 @@ public class Home extends Fragment implements View.OnClickListener{
 
                 Toast.makeText(getContext(), "Service started", Toast.LENGTH_SHORT).show();
             }
+        }
+        else if (v == btnShare){
+            
+        }
+        else if (v == btnFind){
+
         }
     }
 }

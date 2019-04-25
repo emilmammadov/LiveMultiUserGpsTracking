@@ -2,13 +2,15 @@ package com.livetracking.fragments;
 
 public class Loc {
     double lat, longitude, accur;
+    String user;
 
     public Loc(){}
 
-    public Loc(double lat, double longitude, double accur) {
+    public Loc(String user, double lat, double longitude, double accur) {
         this.lat = lat;
         this.longitude = longitude;
         this.accur = accur;
+        this.user = user;
     }
 
     public double getLat() {
@@ -21,5 +23,9 @@ public class Loc {
 
     public double getAccur() {
         return accur;
+    }
+
+    public String getUser() {
+        return user;
     }
 }

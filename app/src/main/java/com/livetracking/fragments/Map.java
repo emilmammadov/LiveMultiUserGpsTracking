@@ -109,10 +109,9 @@ public class Map extends Fragment implements OnMapReadyCallback {
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.e("onLocationChanged", "1");
                 Log.e("ACCURACY", location.getAccuracy() + "");
 
-                liveReference.child(username).setValue(new Loc(location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                liveReference.setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
 
                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 marker.setPosition(latLng);
