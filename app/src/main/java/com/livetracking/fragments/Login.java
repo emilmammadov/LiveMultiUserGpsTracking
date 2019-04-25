@@ -129,6 +129,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                         editor = sp.edit();
                         editor.putBoolean("login",true);
+                        editor.putString("username",strUsername);
                         editor.apply();
                         Runtime_permission();
                     }else{
@@ -159,6 +160,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         if(strPassword.equals(user.getPass()) && check_permission()){
                             editor = sp.edit();
                             editor.putBoolean("login",true);
+                            editor.putString("username",strUsername);
                             editor.apply();
                             Runtime_permission();
                         }
