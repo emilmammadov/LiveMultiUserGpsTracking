@@ -40,14 +40,30 @@ public class Home extends Fragment implements View.OnClickListener{
         btnFind.setOnClickListener(this);
 
         sp=getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);
-        if(sp.getString("service","").equals("on")){
-            btnService.setBackgroundColor(parseColor("#00c853"));
-        }
-        else {
-            btnService.setBackgroundColor(parseColor("#cfd8dc"));
-        }
+        editor=sp.edit();
+        boolean service = sp.getString("service","").equals("on");
+        boolean share = sp.getString("share","").equals("on");
+        boolean find = sp.getString("find","").equals("on");
+        buttonColor(service, share, find);
+
 
         return  rootView;
+    }
+
+    private void buttonColor(boolean service, boolean share, boolean find) {
+        if(service)
+            btnService.setBackgroundColor(parseColor("#00c853"));
+        else
+            btnService.setBackgroundColor(parseColor("#cfd8dc"));
+        if(share)
+            btnShare.setBackgroundColor(parseColor("#00c853"));
+        else
+            btnShare.setBackgroundColor(parseColor("#cfd8dc"));
+        if(find)
+            btnFind.setBackgroundColor(parseColor("#00c853"));
+        else
+            btnFind.setBackgroundColor(parseColor("#cfd8dc"));
+
     }
 
     @Override
@@ -57,8 +73,6 @@ public class Home extends Fragment implements View.OnClickListener{
             if(sp.getString("service","").equals("on")){
                 //if on then turn off
                 btnService.setBackgroundColor(parseColor("#cfd8dc"));
-
-                editor=sp.edit();
                 editor.putString("service","off");
                 editor.apply();
 
@@ -71,8 +85,6 @@ public class Home extends Fragment implements View.OnClickListener{
                 //if off then turn on
 
                 btnService.setBackgroundColor(parseColor("#00c853"));
-
-                editor=sp.edit();
                 editor.putString("service","on");
                 editor.apply();
 
@@ -80,10 +92,29 @@ public class Home extends Fragment implements View.OnClickListener{
             }
         }
         else if (v == btnShare){
-            
+            if(sp.getString("share","").equals("on")){
+                btnShare.setBackgroundColor(parseColor("#cfd8dc"));
+                editor.putString("share","off");
+                editor.apply();
+            }
+            else{
+                btnShare.setBackgroundColor(parseColor("#00c853"));
+                editor.putString("share","on");
+                editor.apply();
+            }
+
         }
         else if (v == btnFind){
-
+            if(sp.getString("find","").equals("on")){
+                btnFind.setBackgroundColor(parseColor("#cfd8dc"));
+                editor.putString("find","off");
+                editor.apply();
+            }
+            else{
+                btnFind.setBackgroundColor(parseColor("#00c853"));
+                editor.putString("find","on");
+                editor.apply();
+            }
         }
     }
 }
