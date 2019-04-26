@@ -130,9 +130,9 @@ public class Main extends AppCompatActivity {
         welcomeBuilder.show();
     }
 
-    public void call_by_home(){
+    public void callBy(String where){
         editor=sp.edit();
-        editor.putString("map_from","home");
+        editor.putString("mapFrom",where);
         editor.apply();
 
         //fragmentTransaction = fragmentManager.beginTransaction();

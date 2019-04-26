@@ -1,4 +1,4 @@
-package com.livetracking.fragments;
+package com.livetracking.DB;
 
 public class Loc {
     double lat, longitude, accur;

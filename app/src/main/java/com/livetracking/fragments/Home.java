@@ -10,14 +10,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.livetracking.R;
 import com.livetracking.Main;
 
 import static android.graphics.Color.parseColor;
 
 public class Home extends Fragment implements View.OnClickListener{
-    Button btnService,btnShare,btnFind;
-
+    Button btnTrack,btnShare,btnFind;
+    DatabaseReference liveReference = FirebaseDatabase.getInstance().getReference("live");
     SharedPreferences sp;
     SharedPreferences.Editor editor;
 
@@ -32,10 +34,10 @@ public class Home extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
-        btnService = rootView.findViewById(R.id.id_service);
+        btnTrack = rootView.findViewById(R.id.id_service);
         btnShare = rootView.findViewById(R.id.btnShare);
         btnFind = rootView.findViewById(R.id.btnFind);
-        btnService.setOnClickListener(this);
+        btnTrack.setOnClickListener(this);
         btnShare.setOnClickListener(this);
         btnFind.setOnClickListener(this);
 
@@ -52,9 +54,9 @@ public class Home extends Fragment implements View.OnClickListener{
 
     private void buttonColor(boolean service, boolean share, boolean find) {
         if(service)
-            btnService.setBackgroundColor(parseColor("#00c853"));
+            btnTrack.setBackgroundColor(parseColor("#00c853"));
         else
-            btnService.setBackgroundColor(parseColor("#cfd8dc"));
+            btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
         if(share)
             btnShare.setBackgroundColor(parseColor("#00c853"));
         else
@@ -68,27 +70,26 @@ public class Home extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if(v== btnService){
-
-            if(sp.getString("service","").equals("on")){
+        if(v== btnTrack){
+            if(sp.getString("track","").equals("on")){
                 //if on then turn off
-                btnService.setBackgroundColor(parseColor("#cfd8dc"));
-                editor.putString("service","off");
+                btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
+                editor.putString("track","off");
                 editor.apply();
 
                 Toast.makeText(getContext(), "Service stopped", Toast.LENGTH_SHORT).show();
 
-                ((Main)getActivity()).call_by_home();
+                ((Main)getActivity()).callBy("track");
 
             }
             else {
                 //if off then turn on
 
-                btnService.setBackgroundColor(parseColor("#00c853"));
-                editor.putString("service","on");
+                btnTrack.setBackgroundColor(parseColor("#00c853"));
+                editor.putString("track","on");
                 editor.apply();
 
-                Toast.makeText(getContext(), "Service started", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Tracking Started", Toast.LENGTH_SHORT).show();
             }
         }
         else if (v == btnShare){
@@ -96,11 +97,16 @@ public class Home extends Fragment implements View.OnClickListener{
                 btnShare.setBackgroundColor(parseColor("#cfd8dc"));
                 editor.putString("share","off");
                 editor.apply();
+
+                liveReference.child(sp.getString("username","")).removeValue();
             }
             else{
                 btnShare.setBackgroundColor(parseColor("#00c853"));
                 editor.putString("share","on");
                 editor.apply();
+
+                ((Main)getActivity()).callBy("share");
+
             }
 
         }
@@ -114,6 +120,8 @@ public class Home extends Fragment implements View.OnClickListener{
                 btnFind.setBackgroundColor(parseColor("#00c853"));
                 editor.putString("find","on");
                 editor.apply();
+
+                ((Main)getActivity()).callBy("find");
             }
         }
     }

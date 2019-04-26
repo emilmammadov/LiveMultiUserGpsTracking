@@ -28,7 +28,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.livetracking.Main;
 import com.livetracking.R;
-import com.livetracking.User;
+import com.livetracking.DB.User;
 
 
 public class Login extends AppCompatActivity implements View.OnClickListener {

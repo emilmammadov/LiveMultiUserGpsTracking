@@ -1,4 +1,4 @@
-package com.livetracking;
+package com.livetracking.DB;
 
 public class User {
     String username, pass;
