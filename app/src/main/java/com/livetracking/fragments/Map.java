@@ -39,11 +39,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.livetracking.DB.Loc;
 import com.livetracking.R;
 
+import java.util.ArrayList;
+
 import static android.content.Context.LOCATION_SERVICE;
 
 public class Map extends Fragment implements OnMapReadyCallback {
 
     DatabaseReference liveReference = FirebaseDatabase.getInstance().getReference("live");
+    double distance;
     private GoogleMap mMap;
     SharedPreferences sp;
     private LocationManager locationManager;
@@ -52,6 +55,8 @@ public class Map extends Fragment implements OnMapReadyCallback {
     Criteria criteria;
     Marker marker;
     Circle circle;
+    int liveDataCount = 0;
+    ArrayList<Marker> markers = new ArrayList<>();
 
     public Map() {
         // Required empty public constructor
@@ -85,20 +90,36 @@ public class Map extends Fragment implements OnMapReadyCallback {
         if(sp.getString("mapFrom","").equals("share"))
             getLocation("share");
         else if(sp.getString("mapFrom","").equals("find"))
-            find();
+            getLocation("find");
         else if(sp.getString("mapFrom","").equals("track"))
             getLocation("track");
 
     }
 
-    public void find(){
+    public void find(final double latitude, final double longitude){
+
         liveReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
-                    Loc location = locationSnapshot.getValue(Loc.class);
-                    Log.e("Locations updated", "location: " + location.getAccur());
+                Log.e("onDataChange","ONDATACHANGE(1)");
+                for(Marker marker: markers){
+                    marker.setVisible(false);
                 }
+                markers.clear();
+                if(sp.getString("find","").equals("on")){
+
+
+                    for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
+                        Loc loc = locationSnapshot.getValue(Loc.class);
+
+                        if((haversine(loc.getLat(),loc.getLongitude(),latitude,longitude)-loc.getAccur())<sp.getInt("distance",0)){
+                            Toast.makeText(getContext(),sp.getInt("distance",0)+"",Toast.LENGTH_SHORT).show();
+                            markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLat(),loc.getLongitude())).title(loc.getUser())));
+                        }
+
+                    }
+                }
+
             }
 
             @Override
@@ -106,10 +127,11 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
             }
         });
+
     }
 
 
-    public void getLocation(String strFrom) {
+    public void getLocation(final String strFrom) {
 
         final String username = sp.getString("username","");
         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
@@ -130,7 +152,13 @@ public class Map extends Fragment implements OnMapReadyCallback {
             public void onLocationChanged(Location location) {
                 Log.e("ACCURACY", location.getAccuracy() + "");
 
-                liveReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                if(strFrom.equals("find")){
+                    find(location.getLatitude(),location.getLongitude());
+                }
+                else if(strFrom.equals("share")){
+                    liveReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                }
+
 
                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 marker.setPosition(latLng);
@@ -182,5 +210,16 @@ public class Map extends Fragment implements OnMapReadyCallback {
         super.onDestroy();
         if (listener != null)
             locationManager.removeUpdates(listener);
+    }
+
+    static double haversine(double lat1, double lon1, double lat2, double lon2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        double a = Math.pow(Math.sin(dLat / 2),2) + Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return 6372.8 * c*1000;
     }
 }

@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -18,7 +20,8 @@ import com.livetracking.Main;
 import static android.graphics.Color.parseColor;
 
 public class Home extends Fragment implements View.OnClickListener{
-    Button btnTrack,btnShare,btnFind;
+    Button btnTrack,btnShare,btnFind,btnDistance;
+    EditText etDistance;
     DatabaseReference liveReference = FirebaseDatabase.getInstance().getReference("live");
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -37,9 +40,12 @@ public class Home extends Fragment implements View.OnClickListener{
         btnTrack = rootView.findViewById(R.id.id_service);
         btnShare = rootView.findViewById(R.id.btnShare);
         btnFind = rootView.findViewById(R.id.btnFind);
+        etDistance = rootView.findViewById(R.id.etDistance);
+        btnDistance = rootView.findViewById(R.id.btnDistance);
         btnTrack.setOnClickListener(this);
         btnShare.setOnClickListener(this);
         btnFind.setOnClickListener(this);
+        btnDistance.setOnClickListener(this);
 
         sp=getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);
         editor=sp.edit();
@@ -72,7 +78,7 @@ public class Home extends Fragment implements View.OnClickListener{
     public void onClick(View v) {
         if(v== btnTrack){
             if(sp.getString("track","").equals("on")){
-                //if on then turn off
+
                 btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
                 editor.putString("track","off");
                 editor.apply();
@@ -82,11 +88,14 @@ public class Home extends Fragment implements View.OnClickListener{
                 ((Main)getActivity()).callBy("track");
 
             }
-            else {
-                //if off then turn on
-
+            else{
                 btnTrack.setBackgroundColor(parseColor("#00c853"));
+                btnFind.setBackgroundColor(parseColor("#cfd8dc"));
+                btnShare.setBackgroundColor(parseColor("#cfd8dc"));
+
                 editor.putString("track","on");
+                editor.putString("share","off");
+                editor.putString("find","off");
                 editor.apply();
 
                 Toast.makeText(getContext(), "Tracking Started", Toast.LENGTH_SHORT).show();
@@ -102,7 +111,12 @@ public class Home extends Fragment implements View.OnClickListener{
             }
             else{
                 btnShare.setBackgroundColor(parseColor("#00c853"));
+                btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
+                btnFind.setBackgroundColor(parseColor("#cfd8dc"));
+
                 editor.putString("share","on");
+                editor.putString("track","off");
+                editor.putString("find","off");
                 editor.apply();
 
                 ((Main)getActivity()).callBy("share");
@@ -118,10 +132,23 @@ public class Home extends Fragment implements View.OnClickListener{
             }
             else{
                 btnFind.setBackgroundColor(parseColor("#00c853"));
+                btnShare.setBackgroundColor(parseColor("#cfd8dc"));
+                btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
+                etDistance.setVisibility(View.VISIBLE);
+                btnDistance.setVisibility(View.VISIBLE);
+
                 editor.putString("find","on");
+                editor.putString("track","off");
+                editor.putString("share","off");
                 editor.apply();
 
-                ((Main)getActivity()).callBy("find");
+            }
+        }
+        else if(v == btnDistance){
+            if(etDistance.getText() != null) {
+                editor.putInt("distance", Integer.parseInt(etDistance.getText().toString()));
+                editor.apply();
+                ((Main) getActivity()).callBy("find");
             }
         }
     }

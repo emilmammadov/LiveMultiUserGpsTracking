@@ -25,7 +25,7 @@
             android:paddingTop="15dp"
             android:paddingRight="35dp"
             android:paddingBottom="15dp"
-            android:text="SERVICE ON/OFF"
+            android:text="Takip et"
             android:textSize="18sp" />
 
         <Button
@@ -39,6 +39,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Yakında Bul" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:ems="10"
+                android:inputType="number"
+                android:visibility="invisible" />
+
+            <Button
+                android:id="@+id/btnDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:visibility="invisible"
+                android:text="@android:string/ok" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

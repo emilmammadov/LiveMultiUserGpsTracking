@@ -147,6 +147,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         else if(v== btnLogin){
             strUsername = etLoginUsername.getText().toString();
             strPassword = etLoginPassword.getText().toString();
+            Log.e(strUsername,strPassword);
             query = userReference.child(strUsername);
 
             query.addValueEventListener(new ValueEventListener() {
