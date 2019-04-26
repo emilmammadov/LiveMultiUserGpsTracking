@@ -31,8 +31,11 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.livetracking.DB.Loc;
 import com.livetracking.R;
 
@@ -80,19 +83,35 @@ public class Map extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
         if(sp.getString("mapFrom","").equals("share"))
-            getLocation();
+            getLocation("share");
         else if(sp.getString("mapFrom","").equals("find"))
-            getLocation();
+            find();
         else if(sp.getString("mapFrom","").equals("track"))
-            getLocation();
+            getLocation("track");
 
     }
 
+    public void find(){
+        liveReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
+                    Loc location = locationSnapshot.getValue(Loc.class);
+                    Log.e("Locations updated", "location: " + location.getAccur());
+                }
+            }
 
-    public void getLocation() {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    public void getLocation(String strFrom) {
 
         final String username = sp.getString("username","");
-        String strFrom = sp.getString("mapFrom","");
         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
