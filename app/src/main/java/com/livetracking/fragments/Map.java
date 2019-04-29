@@ -57,6 +57,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
     Marker marker;
     Circle circle;
     ArrayList<Marker> markers = new ArrayList<>();
+    static long time;
 
     public Map() {
         // Required empty public constructor
@@ -92,7 +93,11 @@ public class Map extends Fragment implements OnMapReadyCallback {
         else if(sp.getString("mapFrom","").equals("find"))
             getLocation("find");
         else if(sp.getString("mapFrom","").equals("track"))
+        {
+            time = System.currentTimeMillis();
             getLocation("track");
+        }
+
 
     }
 
@@ -150,7 +155,6 @@ public class Map extends Fragment implements OnMapReadyCallback {
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.e("ACCURACY", location.getAccuracy() + "");
 
                 if(strFrom.equals("find")){
                     find(location.getLatitude(),location.getLongitude());
@@ -160,7 +164,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
                 }
                 else if(strFrom.equals("track")){
                     Log.e("DENEME",System.currentTimeMillis()+"");
-                    trackReference.child(System.currentTimeMillis() + "").setValue(new Loc(location.getLatitude(),location.getLongitude(),System.currentTimeMillis()));
+                    trackReference.child(time+"").child(System.currentTimeMillis()+"").setValue(new Loc(location.getLatitude(),location.getLongitude(),System.currentTimeMillis()));
                 }
 
 
