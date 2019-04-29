@@ -1,6 +1,5 @@
 package com.livetracking.fragments;
 
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -35,18 +34,20 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.livetracking.DB.Loc;
 import com.livetracking.R;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static android.content.Context.LOCATION_SERVICE;
 
 public class Map extends Fragment implements OnMapReadyCallback {
 
     DatabaseReference liveReference = FirebaseDatabase.getInstance().getReference("live");
-    double distance;
+    DatabaseReference trackReference = FirebaseDatabase.getInstance().getReference("track");
     private GoogleMap mMap;
     SharedPreferences sp;
     private LocationManager locationManager;
@@ -55,7 +56,6 @@ public class Map extends Fragment implements OnMapReadyCallback {
     Criteria criteria;
     Marker marker;
     Circle circle;
-    int liveDataCount = 0;
     ArrayList<Marker> markers = new ArrayList<>();
 
     public Map() {
@@ -139,7 +139,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
         criteria.setAccuracy(Criteria.ACCURACY_FINE);
         criteria.setPowerRequirement(Criteria.POWER_HIGH);
         final String provider = locationManager.getBestProvider(criteria, true);
-        marker = mMap.addMarker(new MarkerOptions().position(new LatLng(30, 30)).title("Lokasyon"));
+        marker = mMap.addMarker(new MarkerOptions().position(new LatLng(30, 30)).title("Lokasyonum"));
         circle = mMap.addCircle(new CircleOptions()
                 .center(new LatLng(30, 30))
                 .radius(5)
@@ -157,6 +157,10 @@ public class Map extends Fragment implements OnMapReadyCallback {
                 }
                 else if(strFrom.equals("share")){
                     liveReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                }
+                else if(strFrom.equals("track")){
+                    Log.e("DENEME",System.currentTimeMillis()+"");
+                    trackReference.child(System.currentTimeMillis() + "").setValue(new Loc(location.getLatitude(),location.getLongitude(),System.currentTimeMillis()));
                 }
 
 
@@ -212,7 +216,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
             locationManager.removeUpdates(listener);
     }
 
-    static double haversine(double lat1, double lon1, double lat2, double lon2) {
+    static double haversine(double lat1, double lon1, double lat2, double lon2)  {
         double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         lat1 = Math.toRadians(lat1);

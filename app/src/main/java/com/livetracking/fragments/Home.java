@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -49,17 +48,17 @@ public class Home extends Fragment implements View.OnClickListener{
 
         sp=getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);
         editor=sp.edit();
-        boolean service = sp.getString("service","").equals("on");
+        boolean track = sp.getString("track","").equals("on");
         boolean share = sp.getString("share","").equals("on");
         boolean find = sp.getString("find","").equals("on");
-        buttonColor(service, share, find);
+        buttonColor(track, share, find);
 
 
         return  rootView;
     }
 
-    private void buttonColor(boolean service, boolean share, boolean find) {
-        if(service)
+    private void buttonColor(boolean track, boolean share, boolean find) {
+        if(track)
             btnTrack.setBackgroundColor(parseColor("#00c853"));
         else
             btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
@@ -81,11 +80,8 @@ public class Home extends Fragment implements View.OnClickListener{
 
                 btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
                 editor.putString("track","off");
+                editor.putString("mapFrom","direct");
                 editor.apply();
-
-                Toast.makeText(getContext(), "Service stopped", Toast.LENGTH_SHORT).show();
-
-                ((Main)getActivity()).callBy("track");
 
             }
             else{
@@ -98,13 +94,14 @@ public class Home extends Fragment implements View.OnClickListener{
                 editor.putString("find","off");
                 editor.apply();
 
-                Toast.makeText(getContext(), "Tracking Started", Toast.LENGTH_SHORT).show();
+                ((Main)getActivity()).callBy("track");
             }
         }
         else if (v == btnShare){
             if(sp.getString("share","").equals("on")){
                 btnShare.setBackgroundColor(parseColor("#cfd8dc"));
                 editor.putString("share","off");
+                editor.putString("mapFrom","direct");
                 editor.apply();
 
                 liveReference.child(sp.getString("username","")).removeValue();
@@ -128,6 +125,7 @@ public class Home extends Fragment implements View.OnClickListener{
             if(sp.getString("find","").equals("on")){
                 btnFind.setBackgroundColor(parseColor("#cfd8dc"));
                 editor.putString("find","off");
+                editor.putString("mapFrom","direct");
                 editor.apply();
             }
             else{

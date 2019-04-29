@@ -138,6 +138,7 @@ public class Main extends AppCompatActivity {
         //fragmentTransaction = fragmentManager.beginTransaction();
         fragmentManager.beginTransaction().replace(R.id.content,new Map()).commit();
         fragment_selector="map";
+        navigation.getMenu().getItem(1).setChecked(true);
         menu_delete.getItem(0).setVisible(false);
 
     }

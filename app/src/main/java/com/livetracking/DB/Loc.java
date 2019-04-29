@@ -1,7 +1,7 @@
 package com.livetracking.DB;
 
 public class Loc {
-    double lat, longitude, accur;
+    double lat, longitude, accur, time;
     String user;
 
     public Loc(){}
@@ -11,6 +11,16 @@ public class Loc {
         this.longitude = longitude;
         this.accur = accur;
         this.user = user;
+    }
+
+    public Loc(double lat, double longitude, double time) {
+        this.lat = lat;
+        this.longitude = longitude;
+        this.time = time;
+    }
+
+    public double getTime() {
+        return time;
     }
 
     public double getLat() {
