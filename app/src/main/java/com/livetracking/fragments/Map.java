@@ -25,8 +25,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -54,7 +52,6 @@ public class Map extends Fragment implements OnMapReadyCallback {
     private LatLng latLng;
     Criteria criteria;
     Marker marker;
-    Circle circle;
     ArrayList<Marker> markers = new ArrayList<>();
     static long time;
 
@@ -117,7 +114,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
                         for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
                             Loc loc = locationSnapshot.getValue(Loc.class);
 
-                            if((haversine(loc.getLat(),loc.getLongitude(),latitude,longitude)-loc.getAccur())<sp.getInt("distanceYaya",0)){
+                            if((haversine(loc.getLat(),loc.getLongitude(),latitude,longitude))<sp.getInt("distanceYaya",0)){
                                 Toast.makeText(getContext(),sp.getInt("distanceYaya",0)+"",Toast.LENGTH_SHORT).show();
                                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLat(),loc.getLongitude())).title(loc.getUser())));
                             }
@@ -148,7 +145,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
                         for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
                             Loc loc = locationSnapshot.getValue(Loc.class);
 
-                            if((haversine(loc.getLat(),loc.getLongitude(),latitude,longitude)-loc.getAccur())<sp.getInt("distanceSurucu",0)){
+                            if((haversine(loc.getLat(),loc.getLongitude(),latitude,longitude))<sp.getInt("distanceSurucu",0)){
                                 Toast.makeText(getContext(),sp.getInt("distanceSurucu",0)+"",Toast.LENGTH_SHORT).show();
                                 markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLat(),loc.getLongitude())).title(loc.getUser())));
                             }
@@ -179,23 +176,17 @@ public class Map extends Fragment implements OnMapReadyCallback {
         criteria.setPowerRequirement(Criteria.POWER_HIGH);
         final String provider = locationManager.getBestProvider(criteria, true);
         marker = mMap.addMarker(new MarkerOptions().position(new LatLng(30, 30)).title("Lokasyonum"));
-        circle = mMap.addCircle(new CircleOptions()
-                .center(new LatLng(30, 30))
-                .radius(5)
-                .strokeWidth(3f)
-                .strokeColor(Color.CYAN)
-                .fillColor(Color.argb(70, 0, 255, 255)));
 
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
 
                 if(strFrom.equals("find")){
-                    liveYayaReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                    liveYayaReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude()));
                     find(location.getLatitude(),location.getLongitude(),"find");
                 }
                 else if(strFrom.equals("share")){
-                    liveSurucuReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                    liveSurucuReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude()));
                     find(location.getLatitude(),location.getLongitude(),"share");
                 }
                 else if(strFrom.equals("track")){
@@ -205,8 +196,6 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 marker.setPosition(latLng);
-                circle.setCenter(latLng);
-                circle.setRadius(location.getAccuracy());
 
                 locationManager.removeUpdates(listener);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 18));
@@ -245,8 +234,6 @@ public class Map extends Fragment implements OnMapReadyCallback {
         }
 
     }
-
-
 
     @Override
     public void onDestroy() {
