@@ -34,20 +34,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.livetracking.DB.Loc;
 import com.livetracking.R;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import static android.content.Context.LOCATION_SERVICE;
 
 public class Map extends Fragment implements OnMapReadyCallback {
 
-    DatabaseReference liveReference = FirebaseDatabase.getInstance().getReference("live");
+    DatabaseReference liveYayaReference = FirebaseDatabase.getInstance().getReference("liveYaya");
     DatabaseReference trackReference = FirebaseDatabase.getInstance().getReference("track");
+    DatabaseReference liveSurucuReference = FirebaseDatabase.getInstance().getReference("liveSurucu");
     private GoogleMap mMap;
     SharedPreferences sp;
     private LocationManager locationManager;
@@ -101,37 +100,72 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
     }
 
-    public void find(final double latitude, final double longitude){
+    public void find(final double latitude, final double longitude, String where){
 
-        liveReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e("onDataChange","ONDATACHANGE(1)");
-                for(Marker marker: markers){
-                    marker.setVisible(false);
-                }
-                markers.clear();
-                if(sp.getString("find","").equals("on")){
-
-
-                    for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
-                        Loc loc = locationSnapshot.getValue(Loc.class);
-
-                        if((haversine(loc.getLat(),loc.getLongitude(),latitude,longitude)-loc.getAccur())<sp.getInt("distance",0)){
-                            Toast.makeText(getContext(),sp.getInt("distance",0)+"",Toast.LENGTH_SHORT).show();
-                            markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLat(),loc.getLongitude())).title(loc.getUser())));
-                        }
-
+        if(where.equals("find")){
+            liveSurucuReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.e("onDataChange","ONDATACHANGE(1)");
+                    for(Marker marker: markers){
+                        marker.setVisible(false);
                     }
+                    markers.clear();
+                    if(sp.getString("find","").equals("on")){
+
+
+                        for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
+                            Loc loc = locationSnapshot.getValue(Loc.class);
+
+                            if((haversine(loc.getLat(),loc.getLongitude(),latitude,longitude)-loc.getAccur())<sp.getInt("distanceYaya",0)){
+                                Toast.makeText(getContext(),sp.getInt("distanceYaya",0)+"",Toast.LENGTH_SHORT).show();
+                                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLat(),loc.getLongitude())).title(loc.getUser())));
+                            }
+
+                        }
+                    }
+
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+        }
+        else if(where.equals("share")){
+            liveYayaReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Log.e("onDataChange","ONDATACHANGE(1)");
+                    for(Marker marker: markers){
+                        marker.setVisible(false);
+                    }
+                    markers.clear();
+                    if(sp.getString("share","").equals("on")){
 
-            }
-        });
+
+                        for (DataSnapshot locationSnapshot : dataSnapshot.getChildren()) {
+                            Loc loc = locationSnapshot.getValue(Loc.class);
+
+                            if((haversine(loc.getLat(),loc.getLongitude(),latitude,longitude)-loc.getAccur())<sp.getInt("distanceSurucu",0)){
+                                Toast.makeText(getContext(),sp.getInt("distanceSurucu",0)+"",Toast.LENGTH_SHORT).show();
+                                markers.add(mMap.addMarker(new MarkerOptions().position(new LatLng(loc.getLat(),loc.getLongitude())).title(loc.getUser())));
+                            }
+
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+
 
     }
 
@@ -157,13 +191,14 @@ public class Map extends Fragment implements OnMapReadyCallback {
             public void onLocationChanged(Location location) {
 
                 if(strFrom.equals("find")){
-                    find(location.getLatitude(),location.getLongitude());
+                    liveYayaReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                    find(location.getLatitude(),location.getLongitude(),"find");
                 }
                 else if(strFrom.equals("share")){
-                    liveReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                    liveSurucuReference.child(username).setValue(new Loc(username,location.getLatitude(),location.getLongitude(),location.getAccuracy()));
+                    find(location.getLatitude(),location.getLongitude(),"share");
                 }
                 else if(strFrom.equals("track")){
-                    Log.e("DENEME",System.currentTimeMillis()+"");
                     trackReference.child(time+"").child(System.currentTimeMillis()+"").setValue(new Loc(location.getLatitude(),location.getLongitude(),System.currentTimeMillis()));
                 }
 

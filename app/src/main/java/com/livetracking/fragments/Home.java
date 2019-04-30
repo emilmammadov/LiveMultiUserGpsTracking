@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -19,9 +18,10 @@ import com.livetracking.Main;
 import static android.graphics.Color.parseColor;
 
 public class Home extends Fragment implements View.OnClickListener{
-    Button btnTrack,btnShare,btnFind,btnDistance;
-    EditText etDistance;
-    DatabaseReference liveReference = FirebaseDatabase.getInstance().getReference("live");
+    Button btnTrack,btnShare,btnFind, btnDistanceYaya, btnDistanceSurucu;
+    EditText etDistanceYaya, etDistanceSurucu;
+    DatabaseReference liveSurucuReference = FirebaseDatabase.getInstance().getReference("liveSurucu");
+    DatabaseReference liveYayaReference = FirebaseDatabase.getInstance().getReference("liveYaya");
     SharedPreferences sp;
     SharedPreferences.Editor editor;
 
@@ -39,12 +39,15 @@ public class Home extends Fragment implements View.OnClickListener{
         btnTrack = rootView.findViewById(R.id.id_service);
         btnShare = rootView.findViewById(R.id.btnShare);
         btnFind = rootView.findViewById(R.id.btnFind);
-        etDistance = rootView.findViewById(R.id.etDistance);
-        btnDistance = rootView.findViewById(R.id.btnDistance);
+        etDistanceYaya = rootView.findViewById(R.id.etDistanceYaya);
+        btnDistanceYaya = rootView.findViewById(R.id.btnDistanceYaya);
+        etDistanceSurucu = rootView.findViewById(R.id.etDistanceSurucu);
+        btnDistanceSurucu = rootView.findViewById(R.id.btnDistanceSurucu);
         btnTrack.setOnClickListener(this);
         btnShare.setOnClickListener(this);
         btnFind.setOnClickListener(this);
-        btnDistance.setOnClickListener(this);
+        btnDistanceYaya.setOnClickListener(this);
+        btnDistanceSurucu.setOnClickListener(this);
 
         sp=getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);
         editor=sp.edit();
@@ -104,19 +107,19 @@ public class Home extends Fragment implements View.OnClickListener{
                 editor.putString("mapFrom","direct");
                 editor.apply();
 
-                liveReference.child(sp.getString("username","")).removeValue();
+                liveSurucuReference.child(sp.getString("username","")).removeValue();
             }
             else{
                 btnShare.setBackgroundColor(parseColor("#00c853"));
                 btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
                 btnFind.setBackgroundColor(parseColor("#cfd8dc"));
+                etDistanceSurucu.setVisibility(View.VISIBLE);
+                btnDistanceSurucu.setVisibility(View.VISIBLE);
 
                 editor.putString("share","on");
                 editor.putString("track","off");
                 editor.putString("find","off");
                 editor.apply();
-
-                ((Main)getActivity()).callBy("share");
 
             }
 
@@ -127,13 +130,15 @@ public class Home extends Fragment implements View.OnClickListener{
                 editor.putString("find","off");
                 editor.putString("mapFrom","direct");
                 editor.apply();
+
+                liveYayaReference.child(sp.getString("username","")).removeValue();
             }
             else{
                 btnFind.setBackgroundColor(parseColor("#00c853"));
                 btnShare.setBackgroundColor(parseColor("#cfd8dc"));
                 btnTrack.setBackgroundColor(parseColor("#cfd8dc"));
-                etDistance.setVisibility(View.VISIBLE);
-                btnDistance.setVisibility(View.VISIBLE);
+                etDistanceYaya.setVisibility(View.VISIBLE);
+                btnDistanceYaya.setVisibility(View.VISIBLE);
 
                 editor.putString("find","on");
                 editor.putString("track","off");
@@ -142,11 +147,18 @@ public class Home extends Fragment implements View.OnClickListener{
 
             }
         }
-        else if(v == btnDistance){
-            if(etDistance.getText() != null) {
-                editor.putInt("distance", Integer.parseInt(etDistance.getText().toString()));
+        else if(v == btnDistanceYaya){
+            if(etDistanceYaya.getText() != null) {
+                editor.putInt("distanceYaya", Integer.parseInt(etDistanceYaya.getText().toString()));
                 editor.apply();
                 ((Main) getActivity()).callBy("find");
+            }
+        }
+        else if(v == btnDistanceSurucu){
+            if(etDistanceSurucu.getText() != null) {
+                editor.putInt("distanceSurucu", Integer.parseInt(etDistanceSurucu.getText().toString()));
+                editor.apply();
+                ((Main) getActivity()).callBy("share");
             }
         }
     }
