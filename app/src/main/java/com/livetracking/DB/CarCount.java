@@ -38,9 +38,6 @@ public class CarCount {
             i++;
         }
         
-        System.out.println("possibleBeginPoints: " + possibleBeginPoints);
-        System.out.println("possibleEndPoints: " + possibleEndPoints);
-        
         Map<Location, Location> voyages = new HashMap<>();
         i = 0;
         for(Location loce : possibleEndPoints){
@@ -57,10 +54,8 @@ public class CarCount {
             }
             if(lastBeginPoint != -1){
                 voyages.put(possibleBeginPoints.get(lastBeginPoint), possibleEndPoints.get(i));
-                //console.log(possibleBeginPoints)
                 lastBeginPoint++;
                 possibleBeginPoints = possibleBeginPoints.subList(lastBeginPoint, possibleBeginPoints.size());
-                //console.log(possibleBeginPoints)
             }
             i++;
         }
@@ -83,19 +78,18 @@ public class CarCount {
                 voyages.remove(i, 1);
             }
         }
-        printVoyage(voyages);
 
         return voyages;
 
     }
     
-    private void printVoyage(Map<Location, Location> voyages){
+    /*private void printVoyage(Map<Location, Location> voyages){
         for(Map.Entry<Location, Location> voyage : voyages.entrySet()){
             System.out.println("Start: " + voyage.toString());
             System.out.println("End: " + voyages.get(voyage).toString());
             System.out.println("\n");
         }
-    }
+    }*/
     
     private double distance(Location p1, Location p2){
         return Math.sqrt(Math.pow((p1.lat-p2.lat), 2) + Math.pow((p1.lng - p2.lng), 2));

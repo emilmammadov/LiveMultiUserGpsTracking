@@ -41,7 +41,7 @@ public class Main extends AppCompatActivity {
                     if(!fragment_selector.equals("home")){
                         fragment_selector="home";
                         fragmentManager.beginTransaction().replace(R.id.content,new Home()).commit();
-                        menu_delete.getItem(0).setVisible(false);
+                        //menu_delete.getItem(0).setVisible(false);
                     }
                     return true;
                 case R.id.nav_map:
@@ -53,7 +53,7 @@ public class Main extends AppCompatActivity {
                         editor.apply();
 
                         fragmentManager.beginTransaction().replace(R.id.content,new Map()).commit();
-                        menu_delete.getItem(0).setVisible(false);
+                        //menu_delete.getItem(0).setVisible(false);
                     }
                     return true;
             }
@@ -139,7 +139,7 @@ public class Main extends AppCompatActivity {
         fragmentManager.beginTransaction().replace(R.id.content,new Map()).commit();
         fragment_selector="map";
         navigation.getMenu().getItem(1).setChecked(true);
-        menu_delete.getItem(0).setVisible(false);
+        //menu_delete.getItem(0).setVisible(false);
 
     }
 

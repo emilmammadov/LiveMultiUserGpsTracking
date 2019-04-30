@@ -1,91 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.Home"
-    android:padding="15dp">
+    android:orientation="vertical"
+    tools:context=".fragments.Home">
 
     <!-- TODO: Update blank fragment layout -->
 
+
+    <Button
+        android:id="@+id/btnTrack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="50dp"
+        android:text="Takip et" />
+
+    <Button
+        android:id="@+id/btnShare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Canlı konum paylaş" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etDistanceSurucu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:ems="10"
+            android:inputType="number"
+            android:visibility="invisible" />
 
         <Button
-            android:id="@+id/id_service"
-            android:layout_width="match_parent"
+            android:id="@+id/btnDistanceSurucu"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="35dp"
-            android:paddingTop="15dp"
-            android:paddingRight="35dp"
-            android:paddingBottom="15dp"
-            android:layout_marginBottom="50dp"
-            android:text="Takip et" />
-
-        <Button
-            android:id="@+id/btnShare"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Canlı konum paylaş" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/etDistanceSurucu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:ems="10"
-                android:inputType="number"
-                android:visibility="invisible" />
-
-            <Button
-                android:id="@+id/btnDistanceSurucu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:visibility="invisible"
-                android:text="@android:string/ok" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnFind"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Yakında Bul" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/etDistanceYaya"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="8"
-                android:ems="10"
-                android:inputType="number"
-                android:visibility="invisible" />
-
-            <Button
-                android:id="@+id/btnDistanceYaya"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:visibility="invisible"
-                android:text="@android:string/ok" />
-        </LinearLayout>
-
+            android:layout_weight="2"
+            android:visibility="invisible"
+            android:text="@android:string/ok" />
     </LinearLayout>
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/btnFind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Yakında Bul" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etDistanceYaya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:ems="10"
+            android:inputType="number"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/btnDistanceYaya"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:visibility="invisible"
+            android:text="@android:string/ok" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnPredict"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tahmin et" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etDistPredict"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ems="10"
+            android:inputType="number"
+            android:visibility="invisible" />
+
+        <EditText
+            android:id="@+id/etTimePredict"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ems="10"
+            android:inputType="number"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/btnPredictOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:visibility="invisible"
+            android:text="@android:string/ok" />
+    </LinearLayout>
+
+</LinearLayout>
