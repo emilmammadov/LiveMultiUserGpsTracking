@@ -38,7 +38,7 @@ import com.livetracking.DB.Loc;
 import com.livetracking.R;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -47,8 +47,8 @@ public class Map extends Fragment implements OnMapReadyCallback {
     DatabaseReference liveYayaReference = FirebaseDatabase.getInstance().getReference("liveYaya");
     DatabaseReference trackReference = FirebaseDatabase.getInstance().getReference("track");
     DatabaseReference liveSurucuReference = FirebaseDatabase.getInstance().getReference("liveSurucu");
-    ArrayList<Loc> locs = new ArrayList<>();
-    java.util.Map<Integer,ArrayList<Loc>> trajectoryMap = new HashMap<>();
+    ArrayList<com.livetracking.DB.Location> locs = new ArrayList<>();
+    ArrayList<ArrayList<com.livetracking.DB.Location>> trajectories = new ArrayList<>();
     private GoogleMap mMap;
     SharedPreferences sp;
     private LocationManager locationManager;
@@ -106,21 +106,25 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
     private void predict() {
         trackReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            int i=0;
+
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                trajectoryMap.clear();
+                trajectories.clear();
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
-                    locs = new ArrayList<Loc>();
+                    locs = new ArrayList<com.livetracking.DB.Location>();
                     for (DataSnapshot post: postSnapshot.getChildren()){
-                        locs.add(post.getValue(Loc.class));
+                        Loc loc = post.getValue(Loc.class);
+                        locs.add(new com.livetracking.DB.Location(loc.getLat(),loc.getLongitude(), new Date(loc.getTime())));
                     }
-                    trajectoryMap.put(i,locs);
-                    i++;
+                    trajectories.add(locs);
                 }
-                for(java.util.Map.Entry<Integer, ArrayList<Loc>> hey: trajectoryMap.entrySet()){
-                    Log.e(hey.getKey()+"",hey.getValue()+"");
+
+                for (ArrayList<com.livetracking.DB.Location> den: trajectories){
+                    for (com.livetracking.DB.Location hey: den){
+                        Log.e("DENEMEEEE",hey+"");
+                    }
                 }
+
             }
 
             @Override
