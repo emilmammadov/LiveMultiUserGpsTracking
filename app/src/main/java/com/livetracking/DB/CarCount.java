@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Date;
 
 public class CarCount {
-    public int carcount(ArrayList<Location> path, Location begin, Location end, int disTol, long timeTol){
+    public static int carcount(ArrayList<Location> path, Location begin, Location end, int disTol, long timeTol){
         List<Location> possibleBeginPoints = new ArrayList();
         List<Location> possibleEndPoints = new ArrayList();
         int count=0;
@@ -94,7 +94,7 @@ public class CarCount {
         }
     }*/
     
-    private double distance(Location p1, Location p2){
+    public static double distance(Location p1, Location p2){
         return Math.sqrt(Math.pow((p1.lat-p2.lat), 2) + Math.pow((p1.lng - p2.lng), 2));
     }
 }

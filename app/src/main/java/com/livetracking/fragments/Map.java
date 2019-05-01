@@ -163,7 +163,16 @@ public class Map extends Fragment implements OnMapReadyCallback {
                                 finish = latLng;
 
                                 for (ArrayList<com.livetracking.DB.Location> den: trajectories){
-                                    predictCount += new CarCount().carcount(den, new com.livetracking.DB.Location(start.latitude,start.longitude,date), new com.livetracking.DB.Location(finish.latitude,finish.longitude,finishDate), disTol,timeTol);
+                                    Log.e("startLat",start.latitude+"");
+                                    Log.e("startLng",start.longitude+"");
+                                    Log.e("date",date+"");
+                                    Log.e("finishLng",finish.latitude+"");
+                                    Log.e("finishLng",finish.longitude+"");
+                                    Log.e("finishDate",finishDate+"");
+                                    Log.e("DisTol", disTol+"");
+                                    Log.e("TimeTol", timeTol+"");
+
+                                    predictCount += CarCount.carcount(den, new com.livetracking.DB.Location(start.latitude,start.longitude,date), new com.livetracking.DB.Location(finish.latitude,finish.longitude,finishDate), disTol,timeTol*60000);
                                 }
                                 Toast.makeText(getContext(),predictCount+"",Toast.LENGTH_SHORT).show();
 
