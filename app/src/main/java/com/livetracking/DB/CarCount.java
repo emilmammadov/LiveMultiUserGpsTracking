@@ -7,9 +7,10 @@ import java.util.Map;
 import java.util.Date;
 
 public class CarCount {
-    public Map<Location, Location> carcount(ArrayList<Location> path, Location begin, Location end, int disTol, long timeTol){
+    public int carcount(ArrayList<Location> path, Location begin, Location end, int disTol, long timeTol){
         List<Location> possibleBeginPoints = new ArrayList();
         List<Location> possibleEndPoints = new ArrayList();
+        int count;
         
         Nearest beginNearest = new Nearest(disTol);
         Nearest endNearest = new Nearest(disTol);
@@ -61,6 +62,7 @@ public class CarCount {
         }
 
         i = 0;
+        count = 0;
         for(Map.Entry<Location, Location> voyage : voyages.entrySet()){
             boolean cond1 = voyage.getKey().time.toString().substring(11, 20).compareTo(begin.time.toString().substring(11, 20)) < 0;
             String d1 = voyage.getKey().time.toString().substring(11, 20);
@@ -76,10 +78,12 @@ public class CarCount {
             if(cond1 || cond2 || cond3){
                 System.out.println("zamanı aşıyor: " + i);
                 voyages.remove(i);
+            }else{
+                count++;
             }
         }
 
-        return voyages;
+        return count;
 
     }
     

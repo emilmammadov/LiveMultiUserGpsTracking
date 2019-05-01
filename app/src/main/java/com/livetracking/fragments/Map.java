@@ -1,7 +1,9 @@
 package com.livetracking.fragments;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -29,11 +31,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.livetracking.DB.CarCount;
 import com.livetracking.DB.Loc;
 import com.livetracking.R;
 
@@ -51,6 +56,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
     ArrayList<ArrayList<com.livetracking.DB.Location>> trajectories = new ArrayList<>();
     private GoogleMap mMap;
     SharedPreferences sp;
+    SharedPreferences.Editor editor;
     private LocationManager locationManager;
     private LocationListener listener;
     private LatLng latLng;
@@ -58,6 +64,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
     Marker marker;
     ArrayList<Marker> markers = new ArrayList<>();
     static long time;
+    static String[] opts = {"Başlangıç","Bitiş"};
 
     public Map() {
         // Required empty public constructor
@@ -70,6 +77,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
         View rootView = inflater.inflate(R.layout.fragment_map, container, false);
 
         sp = getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);
+        editor = sp.edit();
 
         return rootView;
     }
@@ -88,14 +96,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
-        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
-            @Override
-            public void onMapLongClick(LatLng latLng) {
-                if(sp.getString("mapFrom","").equals("predict")){
-                    
-                }
-            }
-        });
+
 
         if(sp.getString("mapFrom","").equals("share"))
             getLocation("share");
@@ -114,6 +115,36 @@ public class Map extends Fragment implements OnMapReadyCallback {
     }
 
     private void predict() {
+
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(final LatLng latLng) {
+                if(sp.getString("mapFrom","").equals("predict")){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setItems(opts, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if ("Başlangıç".equals(opts[which])) {
+                                Log.e("Baslangic","deneme");
+                                editor.putFloat("startLat",(float) latLng.latitude);
+                                editor.putFloat("startLng",(float) latLng.longitude);
+                                editor.apply();
+                            } else {
+                                editor.putFloat("finishLat",(float) latLng.latitude);
+                                editor.putFloat("finishLng",(float) latLng.longitude);
+                                editor.apply();
+                                //for (ArrayList<com.livetracking.DB.Location> den: trajectories)
+                                //new CarCount().carcount(den,)
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+            }
+        });
+
+
+
         trackReference.addListenerForSingleValueEvent(new ValueEventListener() {
 
             @Override

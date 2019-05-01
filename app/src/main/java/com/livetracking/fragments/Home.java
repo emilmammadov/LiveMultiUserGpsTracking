@@ -1,19 +1,24 @@
 package com.livetracking.fragments;
 
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TimePicker;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.livetracking.R;
 import com.livetracking.Main;
+
+import java.util.Calendar;
 
 import static android.graphics.Color.parseColor;
 
@@ -205,7 +210,20 @@ public class Home extends Fragment implements View.OnClickListener{
                 editor.putInt("distancePredict", Integer.parseInt(etDistPredict.getText().toString()));
                 editor.putInt("timePredict", Integer.parseInt(etTimePredict.getText().toString()));
                 editor.apply();
-                ((Main) getActivity()).callBy("predict");
+
+                final Calendar c = Calendar.getInstance();
+                int mHour = c.get(Calendar.HOUR_OF_DAY);
+                int mMinute = c.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                        new TimePickerDialog.OnTimeSetListener() {
+
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                Log.e("NAsilsin","nasilsin");
+                            }
+                        },mHour, mMinute,true);
+                timePickerDialog.show();
+                //((Main) getActivity()).callBy("predict");
             }
         }
     }
