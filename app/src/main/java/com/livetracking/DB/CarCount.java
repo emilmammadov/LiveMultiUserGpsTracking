@@ -1,5 +1,7 @@
 package com.livetracking.DB;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,33 +16,35 @@ public class CarCount {
         
         Nearest beginNearest = new Nearest(disTol);
         Nearest endNearest = new Nearest(disTol);
-        
-        int i = 0;
+
         for(Location loc : path){
-            if(beginNearest.proximity > distance(begin, loc)){
+            double bdis = distance(begin,loc);
+            double edis = distance(end,loc);
+            if(beginNearest.proximity > bdis){
                 beginNearest.point = loc;
-                beginNearest.proximity = distance(begin, loc);
+                beginNearest.proximity = bdis;
             }
             else if(beginNearest.proximity != disTol){
                 possibleBeginPoints.add(beginNearest.point);
                 beginNearest.proximity = disTol;
+                Log.e("BeginPoint","BeginPoint");
             }
-            else if(endNearest.proximity > distance(end, loc)){
+            if(endNearest.proximity > edis){
                 endNearest.point = loc;
-                endNearest.proximity = distance(end, loc);
-                if(i == path.size() -1){
-                    possibleEndPoints.add(endNearest.point);
-                }
+                endNearest.proximity = edis;
             }
             else if(endNearest.proximity != disTol){
                 possibleEndPoints.add(endNearest.point);
                 endNearest.proximity = disTol;
+                Log.e("EndPoint","EndPoint");
             }
-            i++;
         }
+
+        Log.e("PossibleBeginPoints",possibleBeginPoints.size()+"");
+        Log.e("PossibleEndPoints", possibleEndPoints.size() + "");
         
         Map<Location, Location> voyages = new HashMap<>();
-        i = 0;
+        int i = 0;
         for(Location loce : possibleEndPoints){
             int lastBeginPoint = -1;
             int j = 0;
@@ -55,15 +59,14 @@ public class CarCount {
             }
             if(lastBeginPoint != -1){
                 voyages.put(possibleBeginPoints.get(lastBeginPoint), possibleEndPoints.get(i));
-                lastBeginPoint++;
-                possibleBeginPoints = possibleBeginPoints.subList(lastBeginPoint, possibleBeginPoints.size());
+                possibleBeginPoints = possibleBeginPoints.subList(lastBeginPoint+1, possibleBeginPoints.size());
             }
             i++;
         }
 
         i = 0;
         for(Map.Entry<Location, Location> voyage : voyages.entrySet()){
-            boolean cond1 = voyage.getKey().time.toString().substring(11, 20).compareTo(begin.time.toString().substring(11, 20)) < 0;
+            /*boolean cond1 = voyage.getKey().time.toString().substring(11, 20).compareTo(begin.time.toString().substring(11, 20)) < 0;
             String d1 = voyage.getKey().time.toString().substring(11, 20);
             long date = begin.getTime().getTime() + (new Date(timeTol)).getTime();
             Date sum = new Date(date);
@@ -73,8 +76,8 @@ public class CarCount {
             long a = end.time.getTime() - begin.time.getTime();
             long b = voyages.get(voyage).time.getTime() - voyage.getKey().time.getTime();
             
-            boolean cond3 = a < b;
-            if(cond1 || cond2 || cond3){
+            boolean cond3 = a < b;*/
+            if(false){
                 System.out.println("zamanı aşıyor: " + i);
                 voyages.remove(i);
             }else{
@@ -94,7 +97,18 @@ public class CarCount {
         }
     }*/
     
-    public static double distance(Location p1, Location p2){
+    /*public static double distance(Location p1, Location p2){
         return Math.sqrt(Math.pow((p1.lat-p2.lat), 2) + Math.pow((p1.lng - p2.lng), 2));
+    }*/
+
+    static double distance(Location p1, Location p2)  {
+        double dLat = Math.toRadians(p2.lat - p1.lat);
+        double dLon = Math.toRadians(p2.lng - p1.lng);
+        p1.lat = Math.toRadians(p1.lat);
+        p2.lat = Math.toRadians(p2.lat);
+
+        double a = Math.pow(Math.sin(dLat / 2),2) + Math.pow(Math.sin(dLon / 2),2) * Math.cos(p1.lat) * Math.cos(p2.lat);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return 6372.8 * c*1000;
     }
 }
