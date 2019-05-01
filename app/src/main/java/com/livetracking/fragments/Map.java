@@ -2,6 +2,7 @@ package com.livetracking.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -43,6 +45,7 @@ import com.livetracking.DB.Loc;
 import com.livetracking.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -65,6 +68,9 @@ public class Map extends Fragment implements OnMapReadyCallback {
     ArrayList<Marker> markers = new ArrayList<>();
     static long time;
     static String[] opts = {"Başlangıç","Bitiş"};
+    Date date, finishDate;
+    LatLng start,finish;
+    int predictCount=0;
 
     public Map() {
         // Required empty public constructor
@@ -115,6 +121,32 @@ public class Map extends Fragment implements OnMapReadyCallback {
     }
 
     private void predict() {
+        final int disTol = sp.getInt("distancePredict",0);
+        final int timeTol = sp.getInt("tolTimePredict",0);
+        final int maxTime = sp.getInt("maxTimePredict",0);
+
+        final Calendar c = Calendar.getInstance();
+        int mHour = c.get(Calendar.HOUR_OF_DAY);
+        int mMinute = c.get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                new TimePickerDialog.OnTimeSetListener() {
+                    boolean check = true;
+
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        if (check){
+                            check = false;
+                            Calendar cal = Calendar.getInstance();
+                            cal.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                            cal.set(Calendar.MINUTE,minute);
+                            date = cal.getTime();
+                            finishDate = new Date(cal.getTimeInMillis() + ((maxTime + timeTol)*60000));
+
+                        }
+
+                    }
+                },mHour, mMinute,true);
+        timePickerDialog.show();
 
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
@@ -126,15 +158,16 @@ public class Map extends Fragment implements OnMapReadyCallback {
                         public void onClick(DialogInterface dialog, int which) {
                             if ("Başlangıç".equals(opts[which])) {
                                 Log.e("Baslangic","deneme");
-                                editor.putFloat("startLat",(float) latLng.latitude);
-                                editor.putFloat("startLng",(float) latLng.longitude);
-                                editor.apply();
+                                start = latLng;
                             } else {
-                                editor.putFloat("finishLat",(float) latLng.latitude);
-                                editor.putFloat("finishLng",(float) latLng.longitude);
-                                editor.apply();
-                                //for (ArrayList<com.livetracking.DB.Location> den: trajectories)
-                                //new CarCount().carcount(den,)
+                                finish = latLng;
+
+                                for (ArrayList<com.livetracking.DB.Location> den: trajectories){
+                                    predictCount += new CarCount().carcount(den, new com.livetracking.DB.Location(start.latitude,start.longitude,date), new com.livetracking.DB.Location(finish.latitude,finish.longitude,finishDate), disTol,timeTol);
+                                }
+                                Toast.makeText(getContext(),predictCount+"",Toast.LENGTH_SHORT).show();
+
+
                             }
                         }
                     });

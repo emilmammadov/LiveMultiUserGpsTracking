@@ -1,7 +1,10 @@
 package com.livetracking.fragments;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,8 +26,8 @@ import java.util.Calendar;
 import static android.graphics.Color.parseColor;
 
 public class Home extends Fragment implements View.OnClickListener{
-    Button btnTrack,btnShare,btnFind, btnDistanceYaya, btnDistanceSurucu,btnPredict,btnPredictOk;
-    EditText etDistanceYaya, etDistanceSurucu,etDistPredict,etTimePredict;
+    Button btnTrack,btnShare,btnFind, btnDistanceYaya, btnDistanceSurucu,btnPredict;
+    EditText etDistanceYaya, etDistanceSurucu;
     DatabaseReference liveSurucuReference = FirebaseDatabase.getInstance().getReference("liveSurucu");
     DatabaseReference liveYayaReference = FirebaseDatabase.getInstance().getReference("liveYaya");
     SharedPreferences sp;
@@ -45,10 +48,6 @@ public class Home extends Fragment implements View.OnClickListener{
         btnShare = rootView.findViewById(R.id.btnShare);
         btnFind = rootView.findViewById(R.id.btnFind);
         btnPredict = rootView.findViewById(R.id.btnPredict);
-        btnPredictOk = rootView.findViewById(R.id.btnPredictOk);
-
-        etDistPredict = rootView.findViewById(R.id.etDistPredict);
-        etTimePredict = rootView.findViewById(R.id.etTimePredict);
         etDistanceYaya = rootView.findViewById(R.id.etDistanceYaya);
         btnDistanceYaya = rootView.findViewById(R.id.btnDistanceYaya);
         etDistanceSurucu = rootView.findViewById(R.id.etDistanceSurucu);
@@ -59,7 +58,6 @@ public class Home extends Fragment implements View.OnClickListener{
         btnDistanceYaya.setOnClickListener(this);
         btnDistanceSurucu.setOnClickListener(this);
         btnPredict.setOnClickListener(this);
-        btnPredictOk.setOnClickListener(this);
 
         sp=getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);
         editor=sp.edit();
@@ -182,30 +180,44 @@ public class Home extends Fragment implements View.OnClickListener{
         }
         else if(v == btnPredict){
             if(sp.getString("predict","").equals("on")){
-                etDistPredict.setVisibility(View.INVISIBLE);
-                etTimePredict.setVisibility(View.INVISIBLE);
-                btnPredictOk.setVisibility(View.INVISIBLE);
+
                 btnPredict.setBackgroundColor(parseColor("#cfd8dc"));
                 editor.putString("mapFrom","direct");
                 editor.putString("predict","off");
                 editor.apply();
             }
             else{
-                etDistPredict.setVisibility(View.VISIBLE);
-                etTimePredict.setVisibility(View.VISIBLE);
-                btnPredictOk.setVisibility(View.VISIBLE);
-                buttonColor(false, false, false, true);
-                editor.putString("find","off");
-                editor.putString("track","off");
-                editor.putString("share","off");
-                editor.putString("predict","on");
-                editor.apply();
+                LayoutInflater inflater = getLayoutInflater();
+                View dialog = inflater.inflate(R.layout.custom_alert, null);
+                final EditText etDistPredict = dialog.findViewById(R.id.etDistPredict);
+                final EditText etStartTimePredict = dialog.findViewById(R.id.etStartTimePredict);
+                final EditText etTolTimePredict = dialog.findViewById(R.id.etTolTimePredict);
 
-                editor.apply();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setView(dialog);
+                builder.setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        if((!etDistPredict.getText().toString().equals("")) && (!etStartTimePredict.getText().toString().equals("")) && (!etTolTimePredict.getText().toString().equals(""))) {
+                            buttonColor(false, false, false, true);
+                            editor.putString("find","off");
+                            editor.putString("track","off");
+                            editor.putString("share","off");
+                            editor.putString("predict","on");
+                            editor.putInt("distancePredict", Integer.parseInt(etDistPredict.getText().toString()));
+                            editor.putInt("maxTimePredict", Integer.parseInt(etStartTimePredict.getText().toString()));
+                            editor.putInt("tolTimePredict", Integer.parseInt(etTolTimePredict.getText().toString()));
+                            editor.apply();
+
+                            ((Main) getActivity()).callBy("predict");
+                        }
+                    }
+                }).show();
 
             }
         }
-        else if(v == btnPredictOk){
+        /*else if(v == btnPredictOk){
             if((!etDistPredict.getText().toString().equals("")) && (!etTimePredict.getText().toString().equals(""))) {
                 editor.putInt("distancePredict", Integer.parseInt(etDistPredict.getText().toString()));
                 editor.putInt("timePredict", Integer.parseInt(etTimePredict.getText().toString()));
@@ -225,6 +237,6 @@ public class Home extends Fragment implements View.OnClickListener{
                 timePickerDialog.show();
                 //((Main) getActivity()).callBy("predict");
             }
-        }
+        }*/
     }
 }
