@@ -10,7 +10,7 @@
         android:paddingRight="20dp">
 
         <TextView
-            android:text="Mesafe Toleransı"
+            android:text="Mesafe Toleransı (m)"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -32,7 +32,7 @@
         android:paddingRight="20dp">
 
         <TextView
-            android:text="Başlangıç Zamanı"
+            android:text="Maksimum Zaman (dk)"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -54,7 +54,7 @@
         android:paddingRight="20dp">
 
         <TextView
-            android:text="Zaman Toleransı"
+            android:text="Zaman Toleransı (dk)"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

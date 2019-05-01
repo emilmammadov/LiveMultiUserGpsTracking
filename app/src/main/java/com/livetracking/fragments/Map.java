@@ -14,7 +14,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,10 +29,11 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -57,6 +57,8 @@ public class Map extends Fragment implements OnMapReadyCallback {
     DatabaseReference liveSurucuReference = FirebaseDatabase.getInstance().getReference("liveSurucu");
     ArrayList<com.livetracking.DB.Location> locs = new ArrayList<>();
     ArrayList<ArrayList<com.livetracking.DB.Location>> trajectories = new ArrayList<>();
+    ArrayList<ArrayList<LatLng>> latLngTrajs = new ArrayList<>();
+    ArrayList<LatLng> latLngs = new ArrayList<>();
     private GoogleMap mMap;
     SharedPreferences sp;
     SharedPreferences.Editor editor;
@@ -71,6 +73,9 @@ public class Map extends Fragment implements OnMapReadyCallback {
     Date date, finishDate;
     LatLng start,finish;
     int predictCount=0;
+
+    Marker mStart,mEnd;
+    Circle cStart,cEnd;
 
     public Map() {
         // Required empty public constructor
@@ -101,6 +106,25 @@ public class Map extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+
+        mStart = mMap.addMarker(new MarkerOptions().title("Başlangıç").position(new LatLng(30,30)));
+        mEnd = mMap.addMarker(new MarkerOptions().title("Bitiş").position(new LatLng(30,30)));
+        cStart = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(30,30))
+                .radius(20)
+                .fillColor(Color.CYAN)
+                .strokeColor(Color.TRANSPARENT));
+        cEnd = mMap.addCircle(new CircleOptions()
+                .center(new LatLng(30,30))
+                .radius(20)
+                .fillColor(Color.CYAN)
+                .strokeColor(Color.TRANSPARENT));
+        mStart.setVisible(false);
+        mEnd.setVisible(false);
+        cStart.setVisible(false);
+        cEnd.setVisible(false);
+
 
 
 
@@ -157,9 +181,20 @@ public class Map extends Fragment implements OnMapReadyCallback {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             if ("Başlangıç".equals(opts[which])) {
-                                Log.e("Baslangic","deneme");
+                                mStart.setVisible(true);
+                                cStart.setVisible(true);
+                                mStart.setPosition(latLng);
+                                cStart.setCenter(latLng);
+                                cStart.setRadius(disTol);
                                 start = latLng;
+
                             } else {
+                                mEnd.setVisible(true);
+                                cEnd.setVisible(true);
+                                mEnd.setPosition(latLng);
+                                cEnd.setCenter(latLng);
+                                cEnd.setRadius(disTol);
+
                                 finish = latLng;
 
                                 for (ArrayList<com.livetracking.DB.Location> den: trajectories){
@@ -194,11 +229,21 @@ public class Map extends Fragment implements OnMapReadyCallback {
                 trajectories.clear();
                 for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
                     locs = new ArrayList<com.livetracking.DB.Location>();
+                    latLngs = new ArrayList<>();
                     for (DataSnapshot post: postSnapshot.getChildren()){
                         Loc loc = post.getValue(Loc.class);
                         locs.add(new com.livetracking.DB.Location(loc.getLat(),loc.getLongitude(), new Date(loc.getTime())));
+                        latLngs.add(new LatLng(loc.getLat(),loc.getLongitude()));
                     }
                     trajectories.add(locs);
+                    latLngTrajs.add(latLngs);
+                }
+
+                PolylineOptions pol = new PolylineOptions();
+                for(ArrayList<LatLng> latlng: latLngTrajs){
+                    pol.addAll(latlng);
+                    pol.width(5).color(Color.RED);
+                    mMap.addPolyline(pol);
                 }
 
             }

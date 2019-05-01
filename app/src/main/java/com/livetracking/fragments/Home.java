@@ -2,9 +2,11 @@ package com.livetracking.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,7 +28,7 @@ import java.util.Calendar;
 import static android.graphics.Color.parseColor;
 
 public class Home extends Fragment implements View.OnClickListener{
-    Button btnTrack,btnShare,btnFind, btnDistanceYaya, btnDistanceSurucu,btnPredict;
+    Button btnTrack,btnShare,btnFind, btnDistanceYaya, btnDistanceSurucu,btnPredict,btnLogOut;
     EditText etDistanceYaya, etDistanceSurucu;
     DatabaseReference liveSurucuReference = FirebaseDatabase.getInstance().getReference("liveSurucu");
     DatabaseReference liveYayaReference = FirebaseDatabase.getInstance().getReference("liveYaya");
@@ -48,6 +50,7 @@ public class Home extends Fragment implements View.OnClickListener{
         btnShare = rootView.findViewById(R.id.btnShare);
         btnFind = rootView.findViewById(R.id.btnFind);
         btnPredict = rootView.findViewById(R.id.btnPredict);
+        btnLogOut = rootView.findViewById(R.id.btnLogOut);
         etDistanceYaya = rootView.findViewById(R.id.etDistanceYaya);
         btnDistanceYaya = rootView.findViewById(R.id.btnDistanceYaya);
         etDistanceSurucu = rootView.findViewById(R.id.etDistanceSurucu);
@@ -58,6 +61,7 @@ public class Home extends Fragment implements View.OnClickListener{
         btnDistanceYaya.setOnClickListener(this);
         btnDistanceSurucu.setOnClickListener(this);
         btnPredict.setOnClickListener(this);
+        btnLogOut.setOnClickListener(this);
 
         sp=getContext().getSharedPreferences("myData", Context.MODE_PRIVATE);
         editor=sp.edit();
@@ -217,26 +221,12 @@ public class Home extends Fragment implements View.OnClickListener{
 
             }
         }
-        /*else if(v == btnPredictOk){
-            if((!etDistPredict.getText().toString().equals("")) && (!etTimePredict.getText().toString().equals(""))) {
-                editor.putInt("distancePredict", Integer.parseInt(etDistPredict.getText().toString()));
-                editor.putInt("timePredict", Integer.parseInt(etTimePredict.getText().toString()));
-                editor.apply();
-
-                final Calendar c = Calendar.getInstance();
-                int mHour = c.get(Calendar.HOUR_OF_DAY);
-                int mMinute = c.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
-                        new TimePickerDialog.OnTimeSetListener() {
-
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                Log.e("NAsilsin","nasilsin");
-                            }
-                        },mHour, mMinute,true);
-                timePickerDialog.show();
-                //((Main) getActivity()).callBy("predict");
-            }
-        }*/
+        else if (v == btnLogOut){
+            editor = sp.edit();
+            editor.putBoolean("login",false);
+            editor.apply();
+            Intent intent = new Intent(getContext(),Login.class);
+            startActivity(intent);
+        }
     }
 }
