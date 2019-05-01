@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Date;
 
 public class CarCount {
-    public Map<Location, Location> carcount(Location[] path, Location begin, Location end, int disTol, Date timeTol){
+    public Map<Location, Location> carcount(Location[] path, Location begin, Location end, int disTol, long timeTol){
         List<Location> possibleBeginPoints = new ArrayList();
         List<Location> possibleEndPoints = new ArrayList();
         
@@ -64,7 +64,7 @@ public class CarCount {
         for(Map.Entry<Location, Location> voyage : voyages.entrySet()){
             boolean cond1 = voyage.getKey().time.toString().substring(11, 20).compareTo(begin.time.toString().substring(11, 20)) < 0;
             String d1 = voyage.getKey().time.toString().substring(11, 20);
-            long date = begin.getTime().getTime() + timeTol.getTime();
+            long date = begin.getTime().getTime() + (new Date(timeTol)).getTime();
             Date sum = new Date(date);
             String d2 = sum.toString().substring(11, 20);
             boolean cond2 = d1.compareTo(d2) > 0;

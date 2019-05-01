@@ -98,7 +98,6 @@ public class Main extends AppCompatActivity {
     public void logOut(){
         editor = sp.edit();
         editor.putBoolean("login",false);
-        editor.putString("service","off");
         editor.apply();
 
         finish();

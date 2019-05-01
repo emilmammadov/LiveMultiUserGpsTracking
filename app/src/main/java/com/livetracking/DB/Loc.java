@@ -34,4 +34,14 @@ public class Loc {
     public String getUser() {
         return user;
     }
+
+    @Override
+    public String toString() {
+        return "Loc{" +
+                "lat=" + lat +
+                ", longitude=" + longitude +
+                ", time=" + time +
+                ", user='" + user + '\'' +
+                '}';
+    }
 }

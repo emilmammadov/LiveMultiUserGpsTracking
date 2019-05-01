@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,6 +38,7 @@ import com.livetracking.DB.Loc;
 import com.livetracking.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -45,6 +47,8 @@ public class Map extends Fragment implements OnMapReadyCallback {
     DatabaseReference liveYayaReference = FirebaseDatabase.getInstance().getReference("liveYaya");
     DatabaseReference trackReference = FirebaseDatabase.getInstance().getReference("track");
     DatabaseReference liveSurucuReference = FirebaseDatabase.getInstance().getReference("liveSurucu");
+    ArrayList<Loc> locs = new ArrayList<>();
+    java.util.Map<Integer,ArrayList<Loc>> trajectoryMap = new HashMap<>();
     private GoogleMap mMap;
     SharedPreferences sp;
     private LocationManager locationManager;
@@ -88,6 +92,9 @@ public class Map extends Fragment implements OnMapReadyCallback {
             getLocation("share");
         else if(sp.getString("mapFrom","").equals("find"))
             getLocation("find");
+        else if(sp.getString("mapFrom","").equals("predict")){
+            predict();
+        }
         else if(sp.getString("mapFrom","").equals("track"))
         {
             time = System.currentTimeMillis();
@@ -95,6 +102,32 @@ public class Map extends Fragment implements OnMapReadyCallback {
         }
 
 
+    }
+
+    private void predict() {
+        trackReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            int i=0;
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                trajectoryMap.clear();
+                for (DataSnapshot postSnapshot: dataSnapshot.getChildren()) {
+                    locs = new ArrayList<Loc>();
+                    for (DataSnapshot post: postSnapshot.getChildren()){
+                        locs.add(post.getValue(Loc.class));
+                    }
+                    trajectoryMap.put(i,locs);
+                    i++;
+                }
+                for(java.util.Map.Entry<Integer, ArrayList<Loc>> hey: trajectoryMap.entrySet()){
+                    Log.e(hey.getKey()+"",hey.getValue()+"");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public void find(final double latitude, final double longitude, String where){

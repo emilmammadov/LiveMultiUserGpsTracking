@@ -7,10 +7,6 @@ package com.livetracking.DB;
 
 import java.util.Date;
 
-/**
- *
- * @author ilyas
- */
 public class Location {
     double lat;
     double lng;
