@@ -88,6 +88,15 @@ public class Map extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
+        googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                if(sp.getString("mapFrom","").equals("predict")){
+                    
+                }
+            }
+        });
+
         if(sp.getString("mapFrom","").equals("share"))
             getLocation("share");
         else if(sp.getString("mapFrom","").equals("find"))
@@ -117,12 +126,6 @@ public class Map extends Fragment implements OnMapReadyCallback {
                         locs.add(new com.livetracking.DB.Location(loc.getLat(),loc.getLongitude(), new Date(loc.getTime())));
                     }
                     trajectories.add(locs);
-                }
-
-                for (ArrayList<com.livetracking.DB.Location> den: trajectories){
-                    for (com.livetracking.DB.Location hey: den){
-                        Log.e("DENEMEEEE",hey+"");
-                    }
                 }
 
             }

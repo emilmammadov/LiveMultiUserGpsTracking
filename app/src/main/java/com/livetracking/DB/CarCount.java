@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Date;
 
 public class CarCount {
-    public Map<Location, Location> carcount(Location[] path, Location begin, Location end, int disTol, long timeTol){
+    public Map<Location, Location> carcount(ArrayList<Location> path, Location begin, Location end, int disTol, long timeTol){
         List<Location> possibleBeginPoints = new ArrayList();
         List<Location> possibleEndPoints = new ArrayList();
         
@@ -27,7 +27,7 @@ public class CarCount {
             else if(endNearest.proximity > distance(end, loc)){
                 endNearest.point = loc;
                 endNearest.proximity = distance(end, loc);
-                if(i == path.length -1){
+                if(i == path.size() -1){
                     possibleEndPoints.add(endNearest.point);
                 }
             }
@@ -75,7 +75,7 @@ public class CarCount {
             boolean cond3 = a < b;
             if(cond1 || cond2 || cond3){
                 System.out.println("zamanı aşıyor: " + i);
-                voyages.remove(i, 1);
+                voyages.remove(i);
             }
         }
 

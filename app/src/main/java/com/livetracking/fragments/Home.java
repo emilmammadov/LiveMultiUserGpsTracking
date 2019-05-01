@@ -61,13 +61,14 @@ public class Home extends Fragment implements View.OnClickListener{
         boolean track = sp.getString("track","").equals("on");
         boolean share = sp.getString("share","").equals("on");
         boolean find = sp.getString("find","").equals("on");
-        buttonColor(track, share, find);
+        boolean predict = sp.getString("predict","").equals("on");
+        buttonColor(track, share, find, predict);
 
 
         return  rootView;
     }
 
-    private void buttonColor(boolean track, boolean share, boolean find) {
+    private void buttonColor(boolean track, boolean share, boolean find, boolean predict) {
         if(track)
             btnTrack.setBackgroundColor(parseColor("#00c853"));
         else
@@ -80,6 +81,10 @@ public class Home extends Fragment implements View.OnClickListener{
             btnFind.setBackgroundColor(parseColor("#00c853"));
         else
             btnFind.setBackgroundColor(parseColor("#cfd8dc"));
+        if(predict)
+            btnPredict.setBackgroundColor(parseColor("#00c853"));
+        else
+            btnPredict.setBackgroundColor(parseColor("#cfd8dc"));
     }
 
     @Override
@@ -95,7 +100,7 @@ public class Home extends Fragment implements View.OnClickListener{
             }
             else{
 
-                buttonColor(true,false,false);
+                buttonColor(true,false,false,false);
 
                 editor.putString("track","on");
                 editor.putString("share","off");
@@ -119,7 +124,7 @@ public class Home extends Fragment implements View.OnClickListener{
             }
             else{
 
-                buttonColor(false,true,false);
+                buttonColor(false,true,false, false);
                 etDistanceSurucu.setVisibility(View.VISIBLE);
                 btnDistanceSurucu.setVisibility(View.VISIBLE);
 
@@ -144,7 +149,7 @@ public class Home extends Fragment implements View.OnClickListener{
                 liveYayaReference.child(sp.getString("username","")).removeValue();
             }
             else{
-                buttonColor(false,false,true);
+                buttonColor(false,false,true,false);
                 etDistanceYaya.setVisibility(View.VISIBLE);
                 btnDistanceYaya.setVisibility(View.VISIBLE);
 
@@ -175,6 +180,7 @@ public class Home extends Fragment implements View.OnClickListener{
                 etDistPredict.setVisibility(View.INVISIBLE);
                 etTimePredict.setVisibility(View.INVISIBLE);
                 btnPredictOk.setVisibility(View.INVISIBLE);
+                btnPredict.setBackgroundColor(parseColor("#cfd8dc"));
                 editor.putString("mapFrom","direct");
                 editor.putString("predict","off");
                 editor.apply();
@@ -183,6 +189,7 @@ public class Home extends Fragment implements View.OnClickListener{
                 etDistPredict.setVisibility(View.VISIBLE);
                 etTimePredict.setVisibility(View.VISIBLE);
                 btnPredictOk.setVisibility(View.VISIBLE);
+                buttonColor(false, false, false, true);
                 editor.putString("find","off");
                 editor.putString("track","off");
                 editor.putString("share","off");
