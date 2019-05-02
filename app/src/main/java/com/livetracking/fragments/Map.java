@@ -210,6 +210,9 @@ public class Map extends Fragment implements OnMapReadyCallback {
                                     predictCount += CarCount.carcount(den, new com.livetracking.DB.Location(start.latitude,start.longitude,date), new com.livetracking.DB.Location(finish.latitude,finish.longitude,finishDate), disTol,timeTol*60000);
                                 }
                                 Toast.makeText(getContext(),predictCount+"",Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                                alertDialog.setTitle("Sefer Sayısı: " + predictCount);
+                                alertDialog.show();
 
 
                             }
@@ -334,6 +337,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
         criteria.setPowerRequirement(Criteria.POWER_HIGH);
         final String provider = locationManager.getBestProvider(criteria, true);
         marker = mMap.addMarker(new MarkerOptions().position(new LatLng(30, 30)).title("Lokasyonum"));
+        marker.setVisible(false);
 
         listener = new LocationListener() {
             @Override
@@ -353,6 +357,7 @@ public class Map extends Fragment implements OnMapReadyCallback {
 
 
                 latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                marker.setVisible(true);
                 marker.setPosition(latLng);
 
                 locationManager.removeUpdates(listener);
